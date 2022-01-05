@@ -3,7 +3,7 @@
 In this example the BBB will be booted using an SD card with a BOOT partition (FAT16) with an u-boot.img and an MLO files. The u-boot will load the linux kernel and the device tree using the TFTP protocol and the root file system, generated using busybox, will be mounted using a NFS server.
 
 For this example I will use this versions:
-|                        | Version        |
+| Software               | Version        |
 |:----------------------:|:--------------:|
 | u-boot                 | v2017.05-rc2   |
 | linux                  | 4.4.68-ti-r110 |
@@ -70,3 +70,6 @@ For installing the kernel modules in the root file system (in this case the busy
 ```console
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=<path of the RFS> modules_install
 ```
+## Preparing SD
+
+You need to create a BOOT partition format as FAT16 and copy there the MLO and the u-boot.img files generated from u-boot compilation process, you need to copy the [uEnv.txt](uEnv.txt) file from this repository also.
