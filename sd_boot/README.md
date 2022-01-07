@@ -1,14 +1,23 @@
 # SD Booting Example
 
+In this example the BBB will be booted using an SD card with a BOOT partition (FAT16) with an u-boot.img, MLO, linux kernel image (uImage) and device tree files. The u-boot will load the linux kernel and the device stored in the BOOT partition and will mount the root file system stored in the ROOTFS partition, also created in the SD card.
+
+For this example I will use this versions:
+| Software               | Version        |
+|:----------------------:|:--------------:|
+| u-boot                 | v2020.10       |
+| linux                  | 5.10.87-ti-r33 |
+| gcc-linaro-gnueabihf   | 12.0.0-2022.01 |
+
 ## Compiling u-boot
 
 For removing previously compiled/generated object files:
 ```console
 make CROSS_COMPILE=arm-linux-gnueabihf- distclean
 ```
-For applying the default configuration for beaglebone black (for newer versions of u-boot use am335x_evm_defconfig):
+For applying the default configuration for beaglebone black:
 ```console
-make CROSS_COMPILE=arm-linux-gnueabihf- am335x_boneblack_defconfig
+make CROSS_COMPILE=arm-linux-gnueabihf- am335x_evm_defconfig
 ```
 If you want to configure any u-boot option:
 ```console
@@ -25,9 +34,9 @@ For removing previously compiled/generated object files:
 ```console
 make CROSS_COMPILE=arm-linux-gnueabihf- distclean
 ```
-For applying the default configuration (for newer version use use omap2plus_defconfig):
+For applying the default configuration:
 ```console
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- bb.org_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- omap2plus_defconfig
 ```
 If you want to configure any kernel option:
 ```console
