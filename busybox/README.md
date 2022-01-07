@@ -73,3 +73,7 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH=<path of the R
 ## Preparing SD
 
 You need to create a BOOT partition format as FAT16 and copy there the MLO and the u-boot.img files generated from u-boot compilation process, you need to copy the [uEnv.txt](uEnv.txt) file from this repository also.
+
+## TFTP Server
+
+In fedora distribution TFTP server is already installed, you will need to copy am335x-boneblack.dtb and uImage in /var/lib/tftpboot directory (if does not exist you will need to create it).
