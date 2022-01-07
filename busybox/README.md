@@ -76,7 +76,7 @@ You need to create a BOOT partition format as FAT16 and copy there the MLO and t
 
 ## TFTP Server
 
-In Fedora distribution TFTP server is already installed, you will need to copy am335x-boneblack.dtb and uImage in /var/lib/tftpboot directory (if does not exist you will need to create it). These files are generated as output of the linux compilation process.
+In Fedora distribution TFTP server is already installed, you will need to copy am335x-boneblack.dtb and uImage in ```/var/lib/tftpboot``` directory (if does not exist you will need to create it). These files are generated as output of the linux compilation process, you can find the uImage in ```arch/arm/boot```and the am335x-boneblack.dtb in ```arch/arm/boot/dts```
 
 ## NFS Server
 
