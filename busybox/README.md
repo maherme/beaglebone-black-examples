@@ -76,4 +76,34 @@ You need to create a BOOT partition format as FAT16 and copy there the MLO and t
 
 ## TFTP Server
 
-In fedora distribution TFTP server is already installed, you will need to copy am335x-boneblack.dtb and uImage in /var/lib/tftpboot directory (if does not exist you will need to create it). These files are generated as output of the linux compilation process.
+In Fedora distribution TFTP server is already installed, you will need to copy am335x-boneblack.dtb and uImage in /var/lib/tftpboot directory (if does not exist you will need to create it). These files are generated as output of the linux compilation process.
+
+## NFS Server
+
+You will need to install NFS server, in Fedora distribution:
+```console
+sudo dnf install nfs-utils
+```
+
+You also need to create a folder for storing the root file system, for example ```/srv/nfs/bbb``` and give permissons for all users:
+```console
+sudo chmod -R 777 /srv/nfs/bbb
+```
+
+For sharing this folder through the NFS sever you have to modify the ```/etc/exports``` file adding the line: ```/srv/nfs/bbb 192.168.7.2(rw,sync,no_root_squash,no_subtree_check)```
+
+For making this change effective run:
+```console
+sudo exportfs -arv
+```
+And restart the NFS server:
+```console
+sudo systemctl restart nfs-server.service
+```
+
+Maybe you will need to add some exceptions to the firewall:
+```console
+sudo firewall-cmd --permanent --zone public --add-service rpc-bind
+sudo firewall-cmd --permanent --zone public --add-service nfs
+sudo firewall-cmd --reload
+```
