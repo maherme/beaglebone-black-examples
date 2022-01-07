@@ -108,4 +108,4 @@ sudo firewall-cmd --permanent --zone public --add-service nfs
 sudo firewall-cmd --reload
 ```
 
-After that you need to copy the generated root file system by busybox with installed kernel modules into the ```/srv/nfs/bbb``` folder, and create a ```/dev``` and ```/proc``` directories into the root file system to avoid some errors when the kernel mounts the root file system.
+After that you need to copy the generated root file system by busybox with installed kernel modules into the ```/srv/nfs/bbb``` folder, and create a ```/dev``` and ```/proc``` directories into the root file system to avoid some errors when the Beaglebone Black mounts the root file system.
