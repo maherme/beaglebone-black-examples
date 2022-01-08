@@ -60,4 +60,4 @@ You need to create a BOOT partition format as FAT16 and a ROOTF partition format
 
 Copy into the BOOT partition the MLO and the u-boot.img files generated from u-boot compilation process, you need to copy the uImage and the am335x-boneblack.dtb also. Finally copy the [extlinux.conf](extlinux/extlinux.conf) file from this repository into a named folder extlinux, in the BOOT partition also (BOOT/extlinux/extlinux.conf).
 
-Copy the root file system you want to use into the ROOTFS partition (for example, you can use root file system generated with busybox).
+Copy the root file system you want to use into the ROOTFS partition (for example, you can use root file system generated with busybox or using [buildroot](https://github.com/buildroot/buildroot)).
