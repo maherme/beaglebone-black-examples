@@ -82,14 +82,14 @@ Configuring extra settings:
 ```cosole
 make menuconfig
 ```
-Here you can disable the linux kernel and bootloader compilations. For taget options you can select NEON as floating point strategy and Thumb2 as ARM instruction set. You can select an external toolchain. And you need to select the filesystem images, ext2/3/4 variant (ext4), and select the format you use in the ROOTFS in your SD card.
+Here you can disable the linux kernel and bootloader compilations. For taget options you can select NEON as floating point strategy and Thumb2 as ARM instruction set. And you need to select the filesystem images, ext2/3/4 variant (ext4), and select the format you use in the ROOTFS in your SD card.
 
 For compiling:
 ```console
 make
 ```
 
-For copying the output root file system into the SD card (you can use ```lsblk``` command for knowing the mmc device in you PC):
+For copying the output root file system into the SD card (you can use ```lsblk``` command for knowing the mmc device in your PC):
 ```console
 sudo dd if=buildroot/output/images/rootfs.ext4 of=/dev/mmcblk0p2
 ```
