@@ -67,3 +67,29 @@ Copy the root file system you want to use into the ROOTFS partition (for example
 Refer to this [link](https://github.com/maherme/beaglebone-black-examples/tree/master/busybox#compiling-busybox)
 
 ## Compiling Buildroot
+
+For getting the project:
+```console
+git clone git://git.buildroot.net/buildroot
+```
+
+Configuring for Beaglebone Black:
+```console
+make beaglebone_defconfig
+```
+
+Configuring extra settings:
+```cosole
+make menuconfig
+```
+Here you can disable the linux kernel and bootloader compilations. For taget options you can select NEON as floating point strategy and Thumb2 as ARM instruction set. You can select an external toolchain. And you need to select the filesystem images, ext2/3/4 variant (ext4), and select the format you use in the ROOTFS in your SD card.
+
+For compiling:
+```console
+make
+```
+
+For copying the output root file system into the SD card (you can use ```lsblk``` command for knowing the mmc device in you PC):
+```console
+sudo dd if=buildroot/output/images/rootfs.ext4 of=/dev/mmcblk0p2
+```
