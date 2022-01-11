@@ -1,3 +1,9 @@
+/********************************************************************************************************//**
+* @file led_user_control.c
+*
+* @brief Application for controlling the user led.
+**/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -6,14 +12,61 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+/***********************************************************************************************************/
+/*                                       Defines and Macros                                                */
+/***********************************************************************************************************/
+
+/** @brief Path to the file system for controlling the user leds */
 #define SYS_FS_LEDS_PATH "/sys/class/leds"
 
+/***********************************************************************************************************/
+/*                                       Global Variables                                                  */
+/***********************************************************************************************************/
+
+/** @brief Variable for storing the number of the selected user led (argv[1])*/
 static uint8_t led_number = 0;
 
+/***********************************************************************************************************/
+/*                                       Static Function Prototypes                                        */
+/***********************************************************************************************************/
+
+/**
+ * @brief Function for processing the introduced option for trigger.
+ * @param[in] value Is a string with the selected option for trigger.
+ * @return 0 if success.
+ * @return 1 if fail.
+ */
 static uint8_t process_trigger(char* value);
+
+/**
+ * @brief Function for writing the option for trigger into the file system.
+ * @param[in] led_no Is the number of the selected user led.
+ * @param[in] value Is a string with the selected option for trigger.
+ * @return 0 if success.
+ * @return 1 if fail.
+ */
 static uint8_t write_trigger_value(uint8_t led_no, char* value);
+
+/**
+ * @brief Function for processing the introduced value for brightness.
+ * @param[in] value Is an integer with the value for brightness.
+ * @return 0 if success.
+ * @return 1 if fail.
+ */
 static uint8_t process_brightness(int value);
+
+/**
+ * @brief Function for writing the value for brightness into the file system.
+ * @param[in] led_no Is the number of the selected user led.
+ * @param[in] value Is an integer with the value for brightness.
+ * @return 0 if success.
+ * @return 1 if fail.
+ */
 static uint8_t write_brightness_value(uint8_t led_no, int value);
+
+/***********************************************************************************************************/
+/*                                       Main Function                                                     */
+/***********************************************************************************************************/
 
 int main(int argc, char* argv[]){
 
@@ -33,12 +86,13 @@ int main(int argc, char* argv[]){
     else{
         /* Store the led number */
         led_number = atoi(argv[1]);
-        /* Check led number is valid */
+        /* Check if led number is valid */
         if(led_number > 3){
             printf("Invalid usr led number\n");
             printf("Valid <usr led number> : 0, 1, 2 or 3\n");
             return 1;
         }
+
         if(strcmp(argv[2], "trigger") == 0){
             if(process_trigger(argv[3])){
                 return 1;
@@ -59,6 +113,10 @@ int main(int argc, char* argv[]){
 
     return 0;
 }
+
+/***********************************************************************************************************/
+/*                                       Static Function Definitions                                       */
+/***********************************************************************************************************/
 
 static uint8_t process_trigger(char* value){
 
