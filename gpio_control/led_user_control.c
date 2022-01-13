@@ -149,9 +149,12 @@ static uint8_t write_trigger_value(uint8_t led_no, char* value){
     }
 
     if(write(fd, (void*)value, strlen(value)) <= 0){
+        close(fd);
         perror("Error, failed writing trigger value");
         exit(EXIT_FAILURE);
     }
+
+    close(fd);
 
     return 0;
 }
@@ -185,9 +188,12 @@ static uint8_t write_brightness_value(uint8_t led_no, int value){
     }
 
     if(write(fd, (void*)&value, sizeof(value)) <= 0){
+        close(fd);
         perror("Error, failed writing brightness value");
         exit(EXIT_FAILURE);
     }
+
+    close(fd);
 
     return 0;
 }
