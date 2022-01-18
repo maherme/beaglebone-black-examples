@@ -243,7 +243,7 @@ static void start_upcounting(int delay_ms){
 
 static void start_downcounting(int delay_ms){
 
-    uint8_t i = 9;
+    uint8_t i = 0;
 
     if(ini_all_gpio() < 0){
         printf("Error: GPIO init failed\n");
@@ -251,9 +251,9 @@ static void start_downcounting(int delay_ms){
     else{
         printf("Down counting...\n");
         while(1){
-            for(i = 9; i >= 0; i--){
-                write_7seg(i);
-                usleep(delay_ms * 10000);
+            for(i = 0; i < 10; i++){
+                write_7seg(9-i);
+                usleep(delay_ms * 1000);
             }
         }
     }
@@ -261,8 +261,24 @@ static void start_downcounting(int delay_ms){
 
 static void start_updowncounting(int delay_ms){
 
-    start_upcounting(delay_ms);
-    start_downcounting(delay_ms);
+    uint8_t i = 0;
+
+    if(ini_all_gpio() < 0){
+        printf("Error: GPIO init failed\n");
+    }
+    else{
+        printf("Up and down counting...\n");
+        while(1){
+            for(i = 0; i < 10; i++){
+                write_7seg(i);
+                usleep(delay_ms * 1000);
+            }
+            for(i = 1; i < 9; i++){
+                write_7seg(9-i);
+                usleep(delay_ms * 1000);
+            }
+        }
+    }
 }
 
 static void start_randomcounting(int delay_ms){
@@ -277,7 +293,7 @@ static void start_randomcounting(int delay_ms){
         while(1){
             i = rand() % 10;
             write_7seg(i);
-            usleep(delay_ms * 10000);
+            usleep(delay_ms * 1000);
         }
     }
 }

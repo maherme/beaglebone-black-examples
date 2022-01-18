@@ -67,7 +67,7 @@ int gpio_write_value(uint8_t gpio_no, uint8_t out_val){
     int fd = 0;
     char buf[100] = {0};
 
-    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/direction", gpio_no);
+    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/value", gpio_no);
 
     fd = open(buf, O_WRONLY);
     if(fd < 0){
@@ -99,7 +99,7 @@ int gpio_read_value(uint8_t gpio_no){
     uint8_t read_val = 0;
     char buf[100] = {0};
 
-    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/direction", gpio_no);
+    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/value", gpio_no);
 
     fd = open(buf, O_WRONLY);
     if(fd < 0){
@@ -119,7 +119,7 @@ int gpio_config_edge(uint8_t gpio_no, char* edge){
     int fd = 0;
     char buf[100] = {0};
 
-    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/direction", gpio_no);
+    snprintf(buf, sizeof(buf), SYS_FS_GPIO_PATH "/gpio%d/edge", gpio_no);
 
     fd = open(buf, O_WRONLY);
     if(fd < 0){
