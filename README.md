@@ -1,1 +1,1 @@
-# beaglebone-black-examples
+# Beaglebone Black examples
