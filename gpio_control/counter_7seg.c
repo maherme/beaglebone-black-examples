@@ -98,29 +98,35 @@ static void start_updowncounting(int delay_ms);
 
 static int ini_all_gpio(void){
 
-    gpio_config_dir(GPIO_66_P8_7_SEGA, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_66_P8_7_SEGA, GPIO_LOW_VALUE);
+    /* Export all required GPIOs */
+    if(gpio_export(GPIO_66_P8_7_SEGA)){return 1;}
+    if(gpio_export(GPIO_67_P8_8_SEGB)){return 1;}
+    if(gpio_export(GPIO_69_P8_9_SEGC)){return 1;}
+    if(gpio_export(GPIO_68_P8_10_DP)){return 1;}
+    if(gpio_export(GPIO_45_P8_11_SEGD)){return 1;}
+    if(gpio_export(GPIO_44_P8_12_SEGE)){return 1;}
+    if(gpio_export(GPIO_26_P8_14_SEGF)){return 1;}
+    if(gpio_export(GPIO_46_P8_16_SEGG)){return 1;}
 
-    gpio_config_dir(GPIO_67_P8_8_SEGB, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_67_P8_8_SEGB, GPIO_LOW_VALUE);
+    /* Configure the direction of all required GPIOs */
+    if(gpio_config_dir(GPIO_66_P8_7_SEGA, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_67_P8_8_SEGB, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_69_P8_9_SEGC, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_68_P8_10_DP, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_45_P8_11_SEGD, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_44_P8_12_SEGE, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_26_P8_14_SEGF, GPIO_DIR_OUT)){return 1;}
+    if(gpio_config_dir(GPIO_46_P8_16_SEGG, GPIO_DIR_OUT)){return 1;}
 
-    gpio_config_dir(GPIO_69_P8_9_SEGC, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_69_P8_9_SEGC, GPIO_LOW_VALUE);
-
-    gpio_config_dir(GPIO_68_P8_10_DP, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_68_P8_10_DP, GPIO_LOW_VALUE);
-
-    gpio_config_dir(GPIO_45_P8_11_SEGD, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_45_P8_11_SEGD, GPIO_LOW_VALUE);
-
-    gpio_config_dir(GPIO_44_P8_12_SEGE, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_44_P8_12_SEGE, GPIO_LOW_VALUE);
-
-    gpio_config_dir(GPIO_26_P8_14_SEGF, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_26_P8_14_SEGF, GPIO_LOW_VALUE);
-
-    gpio_config_dir(GPIO_46_P8_16_SEGG, GPIO_DIR_OUT);
-    gpio_write_value(GPIO_46_P8_16_SEGG, GPIO_LOW_VALUE);
+    /* Initialize to low the value of all required GPIOs */
+    if(gpio_write_value(GPIO_66_P8_7_SEGA, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_67_P8_8_SEGB, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_69_P8_9_SEGC, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_68_P8_10_DP, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_45_P8_11_SEGD, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_44_P8_12_SEGE, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_26_P8_14_SEGF, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_46_P8_16_SEGG, GPIO_LOW_VALUE)){return 1;}
 
     return 0;
 }

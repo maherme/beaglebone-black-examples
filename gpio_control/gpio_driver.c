@@ -4,6 +4,7 @@
 * @brief Functions for controlling the gpio.
 *
 * Public Functions:
+*       - int gpio_export(uint8_t gpio_no)
 *       - int gpio_config_dir(uint8_t gpio_no, uint8_t dir_val)
 *       - int gpio_write_value(uint8_t gpio_no, uint8_t out_val)
 *       - int gpio_read_value(uint8_t gpio_no)
@@ -22,6 +23,26 @@
 /***********************************************************************************************************/
 /*                                       Public API Definitions                                            */
 /***********************************************************************************************************/
+
+int gpio_export(uint8_t gpio_no){
+
+    int fd = 0;
+    int len = 0;
+    char buf[4] = {0};
+
+    fd = open(SYS_FS_GPIO_PATH "/export", O_WRONLY);
+    if(fd < 0){
+        perror("Error, filer for exporting gpio could not be opened");
+        return fd;
+    }
+
+    len = snprintf(buf, sizeof(buf), "%d", gpio_no);
+    write(fd, buf, len);
+
+    close(fd);
+
+    return 0;
+}
 
 /**
  * @brief Function for setting the direction of a gpio number.

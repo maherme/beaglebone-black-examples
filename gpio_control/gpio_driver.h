@@ -4,6 +4,7 @@
 * @brief Header file containing the prototypes fo the APIs for controlling the gpio.
 *
 * Public Functions:
+*       - int gpio_export(uint8_t gpio_no)
 *       - int gpio_config_dir(uint8_t gpio_no, uint8_t dir_val)
 *       - int gpio_write_value(uint8_t gpio_no, uint8_t out_val)
 *       - int gpio_read_value(uint8_t gpio_no)
@@ -24,6 +25,14 @@
 /***********************************************************************************************************/
 /*                                       APIs Supported                                                    */
 /***********************************************************************************************************/
+
+/**
+ * @brief Function for exporting a gpio number.
+ * @param[in] gpio_no Is the gpio number for exporting.
+ * @return 0 is success.
+ * @return != 0 if fail.
+ */
+int gpio_export(uint8_t gpio_no);
 
 /**
  * @brief Function for setting the direction of a gpio number.
