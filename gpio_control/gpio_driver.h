@@ -22,6 +22,22 @@
 
 #define SYS_FS_GPIO_PATH    "/sys/class/gpio"
 
+/**
+ * @defgroup GPIO_DIR Possible configuration values for direction of GPIOs.
+ * @{
+ */
+#define GPIO_DIR_OUT            1   /**< @brief Value for configuring the direction as output */
+#define GPIO_DIR_IN             0   /**< @brief Value for configuring the direction as input */
+/** @} */
+
+/**
+ * @defgroup GPIO_VALUE Possible output values of GPIOs.
+ * @{
+ */
+#define GPIO_HIGH_VALUE         1   /**< @brief Value for setting the output of the GPIO as high.*/
+#define GPIO_LOW_VALUE          0   /**< @brief Value for setting the output of the GPIO as low */
+/** @} */
+
 /***********************************************************************************************************/
 /*                                       APIs Supported                                                    */
 /***********************************************************************************************************/

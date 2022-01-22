@@ -1,7 +1,7 @@
 /********************************************************************************************************//**
 * @file counter_7seg.c
 *
-* @brief Application for controlling an 7 segment display.
+* @brief Application for controlling a 7 segment display.
 */
 
 #include <stdio.h>
@@ -27,22 +27,6 @@
 #define GPIO_44_P8_12_SEGE      44  /**< @brief GPIO regarding segment E */
 #define GPIO_26_P8_14_SEGF      26  /**< @brief GPIO regarding segment F */
 #define GPIO_46_P8_16_SEGG      46  /**< @brief GPIO regarding segment G */
-/** @} */
-
-/**
- * @defgroup GPIO_DIR Possible configuration values for direction of GPIOs.
- * @{
- */
-#define GPIO_DIR_OUT            1   /**< @brief Value for configuring the direction as output */
-#define GPIO_DIR_IN             0   /**< @brief Value for configuring the direction as input */
-/** @} */
-
-/**
- * @defgroup GPIO_VALUE Possible output values of GPIOs.
- * @{
- */
-#define GPIO_HIGH_VALUE         1   /**< @brief Value for setting the output of the GPIO as high.*/
-#define GPIO_LOW_VALUE          0   /**< @brief Value for setting the output of the GPIO as low */
 /** @} */
 
 /**
@@ -91,6 +75,53 @@ static void start_downcounting(int delay_ms);
  * @return void.
  */
 static void start_updowncounting(int delay_ms);
+
+/**
+ * @brief Function for setting a random number in the display.
+ * @param[in] delay_ms Is a delay in ms for refreshing the counter.
+ * @return void.
+ */
+static void start_randomcounting(int delay_ms);
+
+/***********************************************************************************************************/
+/*                                       Main Function                                                     */
+/***********************************************************************************************************/
+
+int main(int argc, char* argv[]){
+
+    int delay_value = 0;
+
+    printf("Application for up/down/random counter on 7 segment display\n");
+
+    /* Check the right number of arguments */
+    if(argc!= 3){
+        printf("Usage: %s <direction> <delay>\n", argv[0]);
+        printf("Valid direction: up, down, updown, random\n");
+        printf("Recommended delay range in ms: 0 to 1000\n");
+    }
+    else{
+        delay_value = atoi(argv[2]);
+
+        if(!strcmp(argv[1], "up")){
+            start_upcounting(delay_value);
+        }
+        else if(!strcmp(argv[1], "down")){
+            start_downcounting(delay_value);
+        }
+        else if(!strcmp(argv[1], "updown")){
+            start_updowncounting(delay_value);
+        }
+        else if(!strcmp(argv[1], "random")){
+            start_randomcounting(delay_value);
+        }
+        else{
+            printf("Invalid direction values\n");
+            printf("Valid direction values: up, down, updown, random\n");
+        }
+    }
+
+    return 0;
+}
 
 /***********************************************************************************************************/
 /*                                       Static Function Definitions                                       */
@@ -302,44 +333,4 @@ static void start_randomcounting(int delay_ms){
             usleep(delay_ms * 1000);
         }
     }
-}
-
-/***********************************************************************************************************/
-/*                                       Main Function                                                     */
-/***********************************************************************************************************/
-
-int main(int argc, char* argv[]){
-
-    int delay_value = 0;
-
-    printf("Application for up/down/random counter on 7 segment display\n");
-
-    /* Check the right number of arguments */
-    if(argc!= 3){
-        printf("Usage: %s <direction> <delay>\n", argv[0]);
-        printf("Valid direction: up, down, updown, random\n");
-        printf("Recommended delay range in ms: 0 to 1000\n");
-    }
-    else{
-        delay_value = atoi(argv[2]);
-
-        if(!strcmp(argv[1], "up")){
-            start_upcounting(delay_value);
-        }
-        else if(!strcmp(argv[1], "down")){
-            start_downcounting(delay_value);
-        }
-        else if(!strcmp(argv[1], "updown")){
-            start_updowncounting(delay_value);
-        }
-        else if(!strcmp(argv[1], "random")){
-            start_randomcounting(delay_value);
-        }
-        else{
-            printf("Invalid direction values\n");
-            printf("Valid direction values: up, down, updown, random\n");
-        }
-    }
-
-    return 0;
 }
