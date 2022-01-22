@@ -108,7 +108,7 @@ int main(int argc, char* argv[]){
 
     int delay_value = 0;
 
-    printf("Application for up/down/random counter on 7 segment display\n");
+    printf("Application for up/down/random counter on 4 digit 7 segment display\n");
 
     /* Check the right number of arguments */
     if(argc!= 3){
@@ -184,10 +184,10 @@ static int ini_all_gpio(void){
     if(gpio_write_value(GPIO_44_P8_12_SEGE, GPIO_LOW_VALUE)){return 1;}
     if(gpio_write_value(GPIO_26_P8_14_SEGF, GPIO_LOW_VALUE)){return 1;}
     if(gpio_write_value(GPIO_46_P8_16_SEGG, GPIO_LOW_VALUE)){return 1;}
-    if(gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_LOW_VALUE)){return 1;}
-    if(gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_LOW_VALUE)){return 1;}
-    if(gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_LOW_VALUE)){return 1;}
-    if(gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_LOW_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_HIGH_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_HIGH_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_HIGH_VALUE)){return 1;}
+    if(gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_HIGH_VALUE)){return 1;}
 
 
     return 0;
@@ -304,19 +304,19 @@ static void display_number(uint16_t number){
 
     uint8_t i = 0;
 
-    for(i = 0; i < 4; i++){
+    for(i = 4; i > 0; i--){
         switch(i){
             case 1:
-                gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_HIGH_VALUE);
+                gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_LOW_VALUE);
                 break;
             case 2:
-                gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_HIGH_VALUE);
+                gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_LOW_VALUE);
                 break;
             case 3:
-                gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_HIGH_VALUE);
+                gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_LOW_VALUE);
                 break;
             case 4:
-                gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_HIGH_VALUE);
+                gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_LOW_VALUE);
                 break;
             default:
                 break;
@@ -331,16 +331,17 @@ static void display_number(uint16_t number){
         write_7seg(10);
 
         /* Turn off all digits */
-        gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_LOW_VALUE);
-        gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_LOW_VALUE);
-        gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_LOW_VALUE);
-        gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_LOW_VALUE);
+        gpio_write_value(GPIO_48_P9_15_DIG1, GPIO_HIGH_VALUE);
+        gpio_write_value(GPIO_49_P9_23_DIG2, GPIO_HIGH_VALUE);
+        gpio_write_value(GPIO_112_P9_30_DIG3, GPIO_HIGH_VALUE);
+        gpio_write_value(GPIO_115_P9_27_DIG4, GPIO_HIGH_VALUE);
     }
 }
 
 static void start_upcounting(int delay_ms){
 
     uint16_t i = 0;
+    uint16_t number = 0;
 
     if(ini_all_gpio() < 0){
         printf("Error: GPIO init failed\n");
@@ -348,10 +349,11 @@ static void start_upcounting(int delay_ms){
     else{
         printf("Up counting...\n");
         while(1){
-            for(i = 0; i < 10000; i++){
-                display_number(i);
-                usleep(delay_ms * 1000);
+            for(i = 0; i < delay_ms; i++){
+                display_number(number);
             }
+            if(number == 9999){number = 0;}
+            number++;
         }
     }
 }
@@ -359,6 +361,7 @@ static void start_upcounting(int delay_ms){
 static void start_downcounting(int delay_ms){
 
     uint16_t i = 0;
+    uint16_t number = 9999;
 
     if(ini_all_gpio() < 0){
         printf("Error: GPIO init failed\n");
@@ -366,10 +369,11 @@ static void start_downcounting(int delay_ms){
     else{
         printf("Down counting...\n");
         while(1){
-            for(i = 0; i < 10000; i++){
-                display_number(9999-i);
-                usleep(delay_ms * 1000);
+            for(i = 0; i < delay_ms; i++){
+                display_number(number);
             }
+            if(number == 0){number = 9999;}
+            number--;
         }
     }
 }
@@ -377,6 +381,7 @@ static void start_downcounting(int delay_ms){
 static void start_updowncounting(int delay_ms){
 
     uint16_t i = 0;
+    uint16_t number = 0;
 
     if(ini_all_gpio() < 0){
         printf("Error: GPIO init failed\n");
@@ -384,13 +389,17 @@ static void start_updowncounting(int delay_ms){
     else{
         printf("Up and down counting...\n");
         while(1){
-            for(i = 0; i < 10000; i++){
-                display_number(i);
-                usleep(delay_ms * 1000);
+            while(number < 10000){
+                for(i = 0; i < delay_ms; i++){
+                    display_number(number);
+                }
+                number++;
             }
-            for(i = 1; i < 10000; i++){
-                display_number(9999-i);
-                usleep(delay_ms * 1000);
+            while(number > 0){
+                number--;
+                for(i = 0; i < delay_ms; i++){
+                    display_number(number);
+                }
             }
         }
     }
@@ -399,6 +408,7 @@ static void start_updowncounting(int delay_ms){
 static void start_randomcounting(int delay_ms){
 
     uint16_t i = 0;
+    uint16_t number = 0;
 
     if(ini_all_gpio() < 0){
         printf("Error: GPIO init failed\n");
@@ -406,9 +416,10 @@ static void start_randomcounting(int delay_ms){
     else{
         printf("Random counting...\n");
         while(1){
-            i = rand() % 10000;
-            display_number(i);
-            usleep(delay_ms * 1000);
+            number = rand() % 10000;
+            for(i = 0; i < delay_ms; i++){
+                display_number(number);
+            }
         }
     }
 }
