@@ -6,6 +6,8 @@ CFLAGS = -Wall -mcpu=$(MCPU) -mfloat-abi=hard -mfpu=$(MFPU) -mtune=$(MCPU) $(INC
 
 TARGET1 = $(BIN_DIR)/test_led
 TARGET2 = $(BIN_DIR)/test_7seg
+TARGET3 = $(BIN_DIR)/test_button7seg
+TARGET4 = $(BIN_DIR)/test_4dig7seg
 SRC_DIR = .
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
@@ -13,6 +15,10 @@ INCLUDE = -I./
 OBJS1 = $(OBJ_DIR)/led_user_control.o
 OBJS2 = $(OBJ_DIR)/gpio_driver.o \
 		$(OBJ_DIR)/counter_7seg.o
+OBJS3 = $(OBJ_DIR)/gpio_driver.o \
+		$(OBJ_DIR)/button_7seg.o
+OBJS4 = $(OBJ_DIR)/gpio_driver.o \
+		$(OBJ_DIR)/counter_4dig7seg.o
 
 $(TARGET1) : $(OBJS1)
 	@mkdir -p $(BIN_DIR)
@@ -21,6 +27,14 @@ $(TARGET1) : $(OBJS1)
 $(TARGET2) : $(OBJS2)
 	@mkdir -p $(BIN_DIR)
 	$(ARM_CC) $(CFLAGS) $(OBJS2) -o $(TARGET2)
+
+$(TARGET3) : $(OBJS3)
+	@mkdir -p $(BIN_DIR)
+	$(ARM_CC) $(CFLAGS) $(OBJS3) -o $(TARGET3)
+
+$(TARGET4) : $(OBJS4)
+	@mkdir -p $(BIN_DIR)
+	$(ARM_CC) $(CFLAGS) $(OBJS4) -o $(TARGET4)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
@@ -37,3 +51,9 @@ led: $(TARGET1)
 
 .PHONY : 7seg
 7seg: $(TARGET2)
+
+.PHONY : button7seg
+button7seg: $(TARGET3)
+
+.PHONY : 4dig7seg
+4dig7seg: $(TARGET4)
