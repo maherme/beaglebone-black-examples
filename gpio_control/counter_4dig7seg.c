@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "gpio_driver.h"
 
 /***********************************************************************************************************/
@@ -74,31 +75,37 @@ static void display_number(uint16_t number);
 
 /**
  * @brief Function for setting an upcounting process in the display.
- * @param[in] delay_ms Is a delay in ms for refreshing the counter.
+ * @param[in] delay Is a delay for refreshing the counter.
  * @return void.
  */
-static void start_upcounting(int delay_ms);
+static void start_upcounting(int delay);
 
 /**
  * @brief Function for setting a downcounting process in the display.
- * @param[in] delay_ms Is a delay in ms for refreshing the counter.
+ * @param[in] delay Is a delay for refreshing the counter.
  * @return void.
  */
-static void start_downcounting(int delay_ms);
+static void start_downcounting(int delay);
 
 /**
  * @brief Function for setting an upcounting and downcounting process in the display.
- * @param[in] delay_ms Is a delay in ms for refreshing the counter.
+ * @param[in] delay Is a delay for refreshing the counter.
  * @return void.
  */
-static void start_updowncounting(int delay_ms);
+static void start_updowncounting(int delay);
 
 /**
  * @brief Function for setting a random number in the display.
- * @param[in] delay_ms Is a delay in ms for refreshing the counter.
+ * @param[in] delay_ms Is a delay for refreshing the counter.
  * @return void.
  */
-static void start_randomcounting(int delay_ms);
+static void start_randomcounting(int delay);
+
+/**
+ * @brief Function for displaying the system clock (HH:MM).
+ * @return void.
+ */
+static void display_clock(void);
 
 /***********************************************************************************************************/
 /*                                       Main Function                                                     */
@@ -113,8 +120,8 @@ int main(int argc, char* argv[]){
     /* Check the right number of arguments */
     if(argc!= 3){
         printf("Usage: %s <direction> <delay>\n", argv[0]);
-        printf("Valid direction: up, down, updown, random\n");
-        printf("Recommended delay range in ms: 0 to 1000\n");
+        printf("Valid direction: up, down, updown, random or clock\n");
+        printf("Recommended delay range : 1 to 100\n");
     }
     else{
         delay_value = atoi(argv[2]);
@@ -130,6 +137,9 @@ int main(int argc, char* argv[]){
         }
         else if(!strcmp(argv[1], "random")){
             start_randomcounting(delay_value);
+        }
+        else if(!strcmp(argv[1], "clock")){
+            display_clock();
         }
         else{
             printf("Invalid direction values\n");
@@ -338,7 +348,7 @@ static void display_number(uint16_t number){
     }
 }
 
-static void start_upcounting(int delay_ms){
+static void start_upcounting(int delay){
 
     uint16_t i = 0;
     uint16_t number = 0;
@@ -349,7 +359,7 @@ static void start_upcounting(int delay_ms){
     else{
         printf("Up counting...\n");
         while(1){
-            for(i = 0; i < delay_ms; i++){
+            for(i = 0; i < delay; i++){
                 display_number(number);
             }
             if(number == 9999){number = 0;}
@@ -358,7 +368,7 @@ static void start_upcounting(int delay_ms){
     }
 }
 
-static void start_downcounting(int delay_ms){
+static void start_downcounting(int delay){
 
     uint16_t i = 0;
     uint16_t number = 9999;
@@ -369,7 +379,7 @@ static void start_downcounting(int delay_ms){
     else{
         printf("Down counting...\n");
         while(1){
-            for(i = 0; i < delay_ms; i++){
+            for(i = 0; i < delay; i++){
                 display_number(number);
             }
             if(number == 0){number = 9999;}
@@ -378,7 +388,7 @@ static void start_downcounting(int delay_ms){
     }
 }
 
-static void start_updowncounting(int delay_ms){
+static void start_updowncounting(int delay){
 
     uint16_t i = 0;
     uint16_t number = 0;
@@ -390,14 +400,14 @@ static void start_updowncounting(int delay_ms){
         printf("Up and down counting...\n");
         while(1){
             while(number < 10000){
-                for(i = 0; i < delay_ms; i++){
+                for(i = 0; i < delay; i++){
                     display_number(number);
                 }
                 number++;
             }
             while(number > 0){
                 number--;
-                for(i = 0; i < delay_ms; i++){
+                for(i = 0; i < delay; i++){
                     display_number(number);
                 }
             }
@@ -405,7 +415,7 @@ static void start_updowncounting(int delay_ms){
     }
 }
 
-static void start_randomcounting(int delay_ms){
+static void start_randomcounting(int delay){
 
     uint16_t i = 0;
     uint16_t number = 0;
@@ -417,9 +427,31 @@ static void start_randomcounting(int delay_ms){
         printf("Random counting...\n");
         while(1){
             number = rand() % 10000;
-            for(i = 0; i < delay_ms; i++){
+            for(i = 0; i < delay; i++){
                 display_number(number);
             }
+        }
+    }
+}
+
+static void display_clock(void){
+
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    uint16_t current_time = 0;
+
+    if(ini_all_gpio() < 0){
+        printf("Error: GPIO init failed\n");
+    }
+    else{
+        /* Set colon for clock format */
+        gpio_write_value(GPIO_68_P8_10_DP, GPIO_HIGH_VALUE);
+        printf("System clock working (HH:MM)...\n");
+        while(1){
+            t = time(NULL);
+            tm = *localtime(&t);
+            current_time = tm.tm_hour*100 + tm.tm_min;
+            display_number(current_time);
         }
     }
 }
