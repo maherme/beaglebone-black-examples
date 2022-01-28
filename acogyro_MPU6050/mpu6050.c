@@ -4,9 +4,9 @@
 * @brief File containing the APIs for controlling the MPU6050 module.
 *
 * Public Functions:
-*       - int mpu6050_write(uint8_t addr, uint8_t data)
-*       - int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len)
 *       - void mpu6050_init(void)
+*       - void mpu6050_set_aco_scale(aco_scale_t aco_scale)
+*       - void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale)
 *       - void mpu6050_read_aco(short int* buf)
 *       - void mpu6050_read_gyr(short* buf)
 *
@@ -33,42 +33,31 @@
 static int fd = 0;
 
 /***********************************************************************************************************/
-/*                                       Public APIs Definitions                                           */
+/*                                       Static Function Prototypes                                        */
 /***********************************************************************************************************/
 
-int mpu6050_write(uint8_t addr, uint8_t data){
+/**
+ * @brief Function for writing an 8bit data to the mpu6050 at the indicated address.
+ * @param[in] addr Is the mpu6050 address where the data will be written.
+ * @param[in] data Is the 8bit data to be written in the indicated address.
+ * @return 0 if success.
+ * @return != 0 if fail.
+ */
+static int mpu6050_write(uint8_t addr, uint8_t data);
 
-    char buf[2] = {0};
+/**
+ * @brief Function for reading data of the mpu6050 from an indicated address.
+ * @param[in] addr Is the address from reading data.
+ * @param[out] pbuf Is a pointer to the read data.
+ * @param[in] len Is the number of bytes to be read.
+ * @return 0 if success.
+ * @return != 0 if fail.
+ */
+static int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len);
 
-    buf[0] = addr;
-    buf[1] = data;
-
-    if(write(fd, buf, 2) <= 0){
-        perror("mpu6050_write API failed in write process\n");
-        return -1;
-    }
-
-    return 0;
-}
-
-int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len){
-
-    char buf[2] = {0};
-
-    buf[0] = addr;
-
-    if(write(fd, buf, 1) <= 0){
-        perror("mpu6050_read API failed in write process\n");
-        return -1;
-    }
-
-    if(read(fd, pbuf, len) <= 0){
-        perror("mpu6050_read API failed in read process\n");
-        return -1;
-    }
-
-    return 0;
-}
+/***********************************************************************************************************/
+/*                                       Public APIs Definitions                                           */
+/***********************************************************************************************************/
 
 void mpu6050_init(void){
 
@@ -96,6 +85,36 @@ void mpu6050_init(void){
     usleep(500);
 }
 
+void mpu6050_set_aco_scale(aco_scale_t aco_scale){
+
+    char aco_cfg = 0;
+
+    /* Read current configuration register */
+    mpu6050_read(MPU6050_REG_ACO_CFG, &aco_cfg, 1);
+    /* Clear AFS_SEL bits of ACCEL_CONFIG register */
+    aco_cfg &= ~(0b00011000);
+    /* Set AFS_SEL bits of ACCEL_CONFIG register */
+    aco_cfg |= (aco_scale << 3);
+    /* Set configuration register with the selected value */
+    mpu6050_write(MPU6050_REG_ACO_CFG, aco_cfg);
+    usleep(500);
+}
+
+void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale){
+
+    char gyr_cfg = 0;
+
+    /* Read current configuration register */
+    mpu6050_read(MPU6050_REG_GYR_CFG, &gyr_cfg, 1);
+    /* Clear FS_SEL bits of GYRO_CONFIG register */
+    gyr_cfg &= ~(0b00011000);
+    /* Set FS_SEL bits of GYRO_CONFIG register */
+    gyr_cfg |= (gyr_scale << 3);
+    /* Set configuration register with the selected value */
+    mpu6050_write(MPU6050_REG_GYR_CFG, gyr_cfg);
+    usleep(500);
+}
+
 void mpu6050_read_aco(short int* buf){
 
     /* Each axis value is coded into 2 bytes */
@@ -118,4 +137,42 @@ void mpu6050_read_gyr(short* buf){
     buf[0] = (values[0] << 8) + values[1];
     buf[1] = (values[2] << 8) + values[3];
     buf[2] = (values[4] << 8) + values[5];
+}
+
+/***********************************************************************************************************/
+/*                                       Static Function Definitions                                       */
+/***********************************************************************************************************/
+
+static int mpu6050_write(uint8_t addr, uint8_t data){
+
+    char buf[2] = {0};
+
+    buf[0] = addr;
+    buf[1] = data;
+
+    if(write(fd, buf, 2) <= 0){
+        perror("mpu6050_write API failed in write process\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+static int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len){
+
+    char buf[2] = {0};
+
+    buf[0] = addr;
+
+    if(write(fd, buf, 1) <= 0){
+        perror("mpu6050_read API failed in write process\n");
+        return -1;
+    }
+
+    if(read(fd, pbuf, len) <= 0){
+        perror("mpu6050_read API failed in read process\n");
+        return -1;
+    }
+
+    return 0;
 }

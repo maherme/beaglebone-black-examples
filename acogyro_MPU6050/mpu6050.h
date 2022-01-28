@@ -4,9 +4,9 @@
 * @brief Header file containing the prototypes of the APIs for MPU6050 module.
 *
 * Public Functions:
-*       - int mpu6050_write(uint8_t addr, uint8_t data)
-*       - int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len)
 *       - void mpu6050_init(void)
+*       - void mpu6050_set_aco_scale(aco_scale_t aco_scale)
+*       - void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale)
 *       - void mpu6050_read_aco(short int* buf)
 *       - void mpu6050_read_gyr(short* buf)
 */
@@ -80,33 +80,48 @@
 #define SYS_FS_I2C_DEVICE           "/dev/i2c-2"
 
 /***********************************************************************************************************/
-/*                                       APIs Supported                                                    */
+/*                                       Structs and Enums                                                 */
 /***********************************************************************************************************/
 
-/**
- * @brief Function for writing an 8bit data to the mpu6050 at the indicated address.
- * @param[in] addr Is the mpu6050 address where the data will be written.
- * @param[in] data Is the 8bit data to be written in the indicated address.
- * @return 0 if success.
- * @return != 0 if fail.
- */
-int mpu6050_write(uint8_t addr, uint8_t data);
+/** @brief Possible values for accelerometer scale. */
+typedef enum{
+    ACO_SCALE_2G    = 0x00,     /**< @brief 2g scale */
+    ACO_SCALE_4G    = 0x01,     /**< @brief 4g scale */
+    ACO_SCALE_8G    = 0x02,     /**< @brief 8g scale */
+    ACO_SCALE_16G   = 0x03      /**< @brief 16g scale */
+}aco_scale_t;
 
-/**
- * @brief Function for reading data of the mpu6050 from an indicated address.
- * @param[in] addr Is the address from reading data.
- * @param[out] pbuf Is a pointer to the read data.
- * @param[in] len Is the number of bytes to be read.
- * @return 0 if success.
- * @return != 0 if fail.
- */
-int mpu6050_read(uint8_t addr, char* pbuf, uint32_t len);
+/** @brief Possible values for gyroscope scale */
+typedef enum{
+    GYR_SCALE_250   = 0x00,     /**< @brief 250 deg/sec scale */
+    GYR_SCALE_500   = 0x01,     /**< @brief 500 deg/sec scale */
+    GYR_SCALE_1000  = 0x02,     /**< @brief 1000 deg/sec scale */
+    GYR_SCALE_2000  = 0x03      /**< @brief 2000 deg/sec scale */
+}gyr_scale_t;
+
+/***********************************************************************************************************/
+/*                                       APIs Supported                                                    */
+/***********************************************************************************************************/
 
 /**
  * @brief Function for initializing the mpu6050 sensor.
  * @return void.
  */
 void mpu6050_init(void);
+
+/**
+ * @brief Function for setting the scale of the accelerometer.
+ * @param[in] aco_scale Is the selected scale, possible values from aco_scale_t.
+ * @return void.
+ */
+void mpu6050_set_aco_scale(aco_scale_t aco_scale);
+
+/**
+ * @brief Function for setting the scale of the gyroscope.
+ * @param[in] aco_scale Is the selected scale, possible values from gyr_scale_t.
+ * @return void.
+ */
+void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale);
 
 /**
  * @brief Function for reading the accelerometer values.

@@ -26,9 +26,9 @@ int main(void){
         mpu6050_read_gyr(gyr_value);
 
         /* Convert raw values from accelerometer in to g values */
-        aco_x = (double)aco_value[0]/ACO_FS_SENS_0;
-        aco_y = (double)aco_value[1]/ACO_FS_SENS_0;
-        aco_z = (double)aco_value[2]/ACO_FS_SENS_0;
+        aco_x = (double)aco_value[0]/ACO_FS_SENS_3;
+        aco_y = (double)aco_value[1]/ACO_FS_SENS_3;
+        aco_z = (double)aco_value[2]/ACO_FS_SENS_3;
 
         /* Convert raw values for gyroscope in to "deg/seconds" values */
         gyr_x = (double)gyr_value[0]/GYR_FS_SENS_0;
