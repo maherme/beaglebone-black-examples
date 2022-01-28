@@ -9,6 +9,7 @@
 *       - void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale)
 *       - void mpu6050_read_aco(short int* buf)
 *       - void mpu6050_read_gyr(short* buf)
+*       - double mpu6050_read_temp(void)
 *
 * @note
 *       For further information about functions refer to the corresponding header file.
@@ -137,6 +138,20 @@ void mpu6050_read_gyr(short* buf){
     buf[0] = (values[0] << 8) + values[1];
     buf[1] = (values[2] << 8) + values[3];
     buf[2] = (values[4] << 8) + values[5];
+}
+
+double mpu6050_read_temp(void){
+
+    double ret = 0;
+    int16_t raw_temp = 0;
+    char values[2] = {0};   /* Temperature value is coded into 2 bytes */
+
+    mpu6050_read(MPU6050_REG_TEMP_HIGH, values, 2);
+
+    raw_temp = (((int16_t)values[0]) << 8) | values[1];
+    ret = (double)raw_temp/340 + 36.53;
+
+    return ret;
 }
 
 /***********************************************************************************************************/

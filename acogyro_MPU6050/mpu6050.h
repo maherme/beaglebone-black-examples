@@ -9,6 +9,7 @@
 *       - void mpu6050_set_gyr_scale(gyr_scale_t gyr_scale)
 *       - void mpu6050_read_aco(short int* buf)
 *       - void mpu6050_read_gyr(short* buf)
+*       - double mpu6050_read_temp(void)
 */
 
 #ifndef MPU6050_H
@@ -21,7 +22,7 @@
 /***********************************************************************************************************/
 
 /**
- * @defgroup MPU6050_CFG Configuration register for MPU6050 sensor.
+ * @defgroup MPU6050_CFG Configuration registers for MPU6050 sensor.
  * @{
  */
 #define MPU6050_REG_POWER           0x6B    /**< @brief Power register */
@@ -30,7 +31,7 @@
 /** @} */
 
 /**
- * @defgropu MPU6050_ACO_REG Register for reading accelerometer read values for MPU6050 sensor.
+ * @defgroup MPU6050_ACO_REG Registers for reading accelerometer values for MPU6050 sensor.
  * @{
  */
 #define MPU6050_REG_ACO_X_HIGH      0x3B
@@ -42,7 +43,15 @@
 /** @} */
 
 /**
- * @defgropu MPU6050_GYR_REG Register for reading gyroscope read values for MPU6050 sensor.
+ * @defgroup MPU6050_TEMP_REG Registers for reading temperature values from MPU6050 sensor.
+ * @{
+ */
+#define MPU6050_REG_TEMP_HIGH       0x41
+#define MPU6050_REG_TEMP_LOW        0x42
+/** @} */
+
+/**
+ * @defgroup MPU6050_GYR_REG Registers for reading gyroscope values for MPU6050 sensor.
  * @{
  */
 #define MPU6050_REG_GYR_X_HIGH      0x43
@@ -136,5 +145,11 @@ void mpu6050_read_aco(short int* buf);
  * @return void.
  */
 void mpu6050_read_gyr(short* buf);
+
+/**
+ * @brief Function for reading the temperature value.
+ * @return Read temperature in celsius degree.
+ */
+double mpu6050_read_temp(void);
 
 #endif
