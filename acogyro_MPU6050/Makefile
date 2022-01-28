@@ -9,7 +9,8 @@ SRC_DIR = .
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
 INCLUDE = -I./
-OBJS1 = $(OBJ_DIR)/mpu6050.o
+OBJS1 = $(OBJ_DIR)/test_mpu6050.o \
+		$(OBJ_DIR)/mpu6050.o
 
 $(TARGET1) : $(OBJS1)
 	@mkdir -p $(BIN_DIR)
