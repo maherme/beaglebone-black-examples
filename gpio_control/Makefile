@@ -8,6 +8,7 @@ TARGET1 = $(BIN_DIR)/test_led
 TARGET2 = $(BIN_DIR)/test_7seg
 TARGET3 = $(BIN_DIR)/test_button7seg
 TARGET4 = $(BIN_DIR)/test_4dig7seg
+TARGET5 = $(BIN_DIR)/test_lcd
 SRC_DIR = .
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
@@ -19,6 +20,9 @@ OBJS3 = $(OBJ_DIR)/gpio_driver.o \
 		$(OBJ_DIR)/button_7seg.o
 OBJS4 = $(OBJ_DIR)/gpio_driver.o \
 		$(OBJ_DIR)/counter_4dig7seg.o
+OBJS5 = $(OBJ_DIR)/print_lcd.o \
+		$(OBJ_DIR)/gpio_driver.o \
+		$(OBJ_DIR)/lcd_hd44780.o
 
 $(TARGET1) : $(OBJS1)
 	@mkdir -p $(BIN_DIR)
@@ -35,6 +39,10 @@ $(TARGET3) : $(OBJS3)
 $(TARGET4) : $(OBJS4)
 	@mkdir -p $(BIN_DIR)
 	$(ARM_CC) $(CFLAGS) $(OBJS4) -o $(TARGET4)
+
+$(TARGET5) : $(OBJS5)
+	@mkdir -p $(BIN_DIR)
+	$(ARM_CC) $(CFLAGS) $(OBJS5) -o $(TARGET5)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
@@ -57,3 +65,6 @@ button7seg: $(TARGET3)
 
 .PHONY : 4dig7seg
 4dig7seg: $(TARGET4)
+
+.PHONY : lcd
+lcd: $(TARGET5)
