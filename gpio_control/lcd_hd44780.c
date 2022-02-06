@@ -56,6 +56,15 @@ void hd44780_init(void){
     gpio_config_dir(GPIO_44_P8_12_D6_13, GPIO_DIR_OUT);
     gpio_config_dir(GPIO_26_P8_14_D7_14, GPIO_DIR_OUT);
 
+    /* Set initial value */
+    gpio_write_value(GPIO_66_P8_7_RS_4, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_67_P8_8_RW_5, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_69_P8_9_EN_6, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_68_P8_10_D4_11, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_45_P8_11_D5_12, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_44_P8_12_D6_13, GPIO_LOW_VALUE);
+    gpio_write_value(GPIO_26_P8_14_D7_14, GPIO_LOW_VALUE);
+
     cmd = HD44780_CMD_FUNC_SET | DATA_LEN_4 | DISPLAY_2_LINES | MATRIX_5_X_8;
     hd44780_send_cmd(cmd);
 
@@ -86,12 +95,12 @@ void hd44780_send_cmd(uint8_t cmd){
     gpio_write_value(GPIO_45_P8_11_D5_12, (cmd_msb & (1 << 1)));
     gpio_write_value(GPIO_44_P8_12_D6_13, (cmd_msb & (1 << 2)));
     gpio_write_value(GPIO_26_P8_14_D7_14, (cmd_msb & (1 << 3)));
+    hd44780_enable();
     /* Send the LSB */
     gpio_write_value(GPIO_68_P8_10_D4_11, (cmd_lsb & (1 << 0)));
     gpio_write_value(GPIO_45_P8_11_D5_12, (cmd_lsb & (1 << 1)));
     gpio_write_value(GPIO_44_P8_12_D6_13, (cmd_lsb & (1 << 2)));
     gpio_write_value(GPIO_26_P8_14_D7_14, (cmd_lsb & (1 << 3)));
-
     hd44780_enable();
 }
 

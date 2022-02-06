@@ -5,6 +5,7 @@
 */
 
 #include <time.h>
+#include <unistd.h>
 #include "lcd_hd44780.h"
 
 /***********************************************************************************************************/
@@ -26,6 +27,9 @@ int main(int argc, char* argv[]){
     hd44780_init();
 
     while(1){
+        sleep(1);
+        hd44780_set_cursor(1, 1);
+        hd44780_send_cmd(HD44780_CMD_CLEAR_DISP);
         print_time();
     }
 
@@ -45,7 +49,7 @@ void print_time(void){
     timeinfo = localtime(&time_val);
 
     hd44780_send_cmd(DDRAM_FST_LN_BASE_ADDR);
-    hd44780_printf("%d-%d-%d", 1900 + timeinfo->tm_year, timeinfo->tm_mon, timeinfo->tm_mday);
+    hd44780_printf("%04d-%02d-%02d", 1900 + timeinfo->tm_year, timeinfo->tm_mon, timeinfo->tm_mday);
     hd44780_send_cmd(DDRAM_SND_LN_BASE_ADDR);
-    hd44780_printf("%d:%d:%d", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
+    hd44780_printf("%02d:%02d:%02d", timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec);
 }
