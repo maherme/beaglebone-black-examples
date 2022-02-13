@@ -38,3 +38,16 @@ Here you can find some examples about configuring and controlling the GPIO of th
   | P9-23 (GPIO 49)  | Digit 2 (pin 9)       |
   | P9-30 (GPIO 112) | Digit 3 (pin 8)       |
   | P9-27 (GPIO 115) | Digit 4 (pin 6)       |
+
+- [print_lcd.c](print_lcd.c): in this file you control a 2x16 LCD (HD44780). You can compile this application using ```make lcd```.
+
+  The connection between BBB and the LCD is as follow:
+  | BeagleBone Black | 2x16 LCD (HD44780)    |
+  |:----------------:|:---------------------:|
+  | P8-7 (GPIO 66)   | RS (pin 4)            |
+  | P8-8 (GPIO 67)   | RW (pin 5)            |
+  | P8-9 (GPIO 69)   | Enable (pin 6)        |
+  | P8-10 (GPIO 68)  | Data 4 (pin 11)       |
+  | P8-11 (GPIO 45)  | Data 5 (pin 12)       |
+  | P8-12 (GPIO 44)  | Data 6 (pin 13)       |
+  | P8-14 (GPIO 26)  | Data 7 (pin 14)       |
