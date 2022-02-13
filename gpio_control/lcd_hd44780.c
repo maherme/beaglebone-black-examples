@@ -76,7 +76,7 @@ void hd44780_init(void){
 
     usleep(INS_WAIT_TIME);
 
-    cmd = HD44780_CMD_DISPLAY | DISPLAY_ON | CURSOR_ON;
+    cmd = HD44780_CMD_DISPLAY | DISPLAY_ON | CURSOR_OFF;
     hd44780_send_cmd(cmd);
 
     usleep(INS_WAIT_TIME);
