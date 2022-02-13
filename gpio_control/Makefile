@@ -10,9 +10,11 @@ TARGET3 = $(BIN_DIR)/test_button7seg
 TARGET4 = $(BIN_DIR)/test_4dig7seg
 TARGET5 = $(BIN_DIR)/test_lcd
 SRC_DIR = .
+DRV_DIR = ./drv
+BSP_DIR = ./bsp
 OBJ_DIR = ./obj
 BIN_DIR = ./bin
-INCLUDE = -I./
+INCLUDE = -I./ -I./drv -I./bsp
 OBJS1 = $(OBJ_DIR)/led_user_control.o
 OBJS2 = $(OBJ_DIR)/gpio_driver.o \
 		$(OBJ_DIR)/counter_7seg.o
@@ -45,6 +47,14 @@ $(TARGET5) : $(OBJS5)
 	$(ARM_CC) $(CFLAGS) $(OBJS5) -o $(TARGET5)
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(ARM_CC) -c $(CFLAGS) $< -o $@
+
+$(OBJ_DIR)/%.o : $(DRV_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	$(ARM_CC) -c $(CFLAGS) $< -o $@
+
+$(OBJ_DIR)/%.o : $(BSP_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
 	$(ARM_CC) -c $(CFLAGS) $< -o $@
 
