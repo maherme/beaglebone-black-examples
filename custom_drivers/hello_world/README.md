@@ -22,3 +22,24 @@ modinfo main.ko
 ```console
 <compiler_path>/arm-linux-gnueabihf-objdump -h main.ko
 ```
+## Adding in-tree module to kernel menu configuration:
+- Create a folder inside linux repository, in drivers/char/<your_name>, for exaple drivers/char/foo.
+- Copy [main.c](main.c) inside this folder.
+- Copy [Kconfig](Kconfig) inside this folder.
+- Create a Makefile with the following line:
+  ```make
+  obj-$(CONFIG_CUSTOM_HELLOWORLD) += main.o
+  ```
+- Add the local Kconfig entry to upper level Kconfig:
+  ```
+  source "drivers/char/foo/Kconfig"
+  ```
+- Modify the upper Makefile (in drivers/char/) adding:
+  ```make
+  obj-y +=.my_c_dev/
+  ```
+Then you can access to this kernel module executing:
+```console
+make ARCH=arm menuconfig
+```
+The new module will be in Device Drivers ---> Character devices ---> maherme custom modules.
