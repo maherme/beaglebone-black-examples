@@ -22,8 +22,36 @@ struct cdev pcd_cdev;
 
 loff_t pcd_lseek(struct file* p_file, loff_t offset, int whence){
 
+    loff_t temp;
+
     pr_info("lseek requested\n");
-    return 0;
+    pr_info("Current value of the file position = %lld\n", p_file->f_pos);
+
+    switch(whence){
+        case SEEK_SET:
+            if((offset > DEV_MEM_SIZE) || (offset < 0))
+                return -EINVAL;
+            p_file->f_pos = offset;
+            break;
+        case SEEK_CUR:
+            temp = p_file->f_pos + offset;
+            if((temp > DEV_MEM_SIZE) || (temp < 0))
+                return -EINVAL;
+            p_file->f_pos = temp;
+            break;
+        case SEEK_END:
+            temp = DEV_MEM_SIZE + offset;
+            if((temp > DEV_MEM_SIZE) || (temp < 0))
+                return -EINVAL;
+            p_file->f_pos = temp;
+            break;
+        default:
+            return -EINVAL;
+    }
+
+    pr_info("New value of the file position = %lld\n", p_file->f_pos);
+
+    return p_file->f_pos;
 }
 
 ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f_pos)
@@ -80,13 +108,13 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 int pcd_open(struct inode* inode, struct file* p_file)
 {
 
-    pr_info("open was successful\n");
+    pr_info("Open was successful\n");
     return 0;
 }
 
 int pcd_release(struct inode* inode, struct file* p_file){
 
-    pr_info("close was successful\n");
+    pr_info("Release was successful\n");
     return 0;
 }
 
