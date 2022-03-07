@@ -9,7 +9,7 @@
 
 /** @brief This modify pr_info for printing the function name */
 #undef pr_fmt
-#define pr_fmt(fmt) "%s :" fmt,__func__
+#define pr_fmt(fmt) "%s : " fmt,__func__
 
 /** @brief pseudo device's memory */
 char device_buffer[DEV_MEM_SIZE];
@@ -25,7 +25,7 @@ loff_t pcd_lseek(struct file* p_file, loff_t offset, int whence){
     loff_t temp;
 
     pr_info("lseek requested\n");
-    pr_info("Current value of the file position = %lld\n", p_file->f_pos);
+    pr_info("current value of the file position = %lld\n", p_file->f_pos);
 
     switch(whence){
         case SEEK_SET:
@@ -49,7 +49,7 @@ loff_t pcd_lseek(struct file* p_file, loff_t offset, int whence){
             return -EINVAL;
     }
 
-    pr_info("New value of the file position = %lld\n", p_file->f_pos);
+    pr_info("new value of the file position = %lld\n", p_file->f_pos);
 
     return p_file->f_pos;
 }
@@ -57,8 +57,8 @@ loff_t pcd_lseek(struct file* p_file, loff_t offset, int whence){
 ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f_pos)
 {
 
-    pr_info("Read requested for %zu bytes\n", count);
-    pr_info("Current file position = %lld\n", *f_pos);
+    pr_info("read requested for %zu bytes\n", count);
+    pr_info("current file position = %lld\n", *f_pos);
 
     /* Adjust the count */
     if((*f_pos + count) > DEV_MEM_SIZE)
@@ -71,8 +71,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     /* Update the current file position */
     *f_pos += count;
 
-    pr_info("Number of bytes successfully read = %zu\n", count);
-    pr_info("Updated file position = %lld\n", *f_pos);
+    pr_info("number of bytes successfully read = %zu\n", count);
+    pr_info("updated file position = %lld\n", *f_pos);
 
     /* Return number of bytes which have been successfully read */
     return count;
@@ -81,15 +81,17 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
 ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, loff_t* f_pos)
 {
 
-    pr_info("Write requested for %zu bytes\n", count);
-    pr_info("Current file position = %lld\n", *f_pos);
+    pr_info("write requested for %zu bytes\n", count);
+    pr_info("current file position = %lld\n", *f_pos);
 
     /* Adjust the count */
     if((*f_pos + count) > DEV_MEM_SIZE)
         count = DEV_MEM_SIZE - *f_pos;
 
-    if(!count)
+    if(!count){
+        pr_err("No space left on the device\n");
         return -ENOMEM;
+    }
 
     /* Copy from user */
     if(copy_from_user(&device_buffer[*f_pos], buff, count))
@@ -98,8 +100,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
     /* Update the current file position */
     *f_pos += count;
 
-    pr_info("Number of bytes successfully written = %zu\n", count);
-    pr_info("Updated file position = %lld\n", *f_pos);
+    pr_info("number of bytes successfully written = %zu\n", count);
+    pr_info("updated file position = %lld\n", *f_pos);
 
     /* Return number of bytes which have been successfully written */
     return count;
@@ -108,13 +110,13 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 int pcd_open(struct inode* inode, struct file* p_file)
 {
 
-    pr_info("Open was successful\n");
+    pr_info("open was successful\n");
     return 0;
 }
 
 int pcd_release(struct inode* inode, struct file* p_file){
 
-    pr_info("Release was successful\n");
+    pr_info("release was successful\n");
     return 0;
 }
 
