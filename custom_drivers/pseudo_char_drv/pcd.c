@@ -3,6 +3,7 @@
 #include <linux/cdev.h>
 #include <linux/device.h>
 #include <linux/kdev_t.h>
+#include <linux/uaccess.h>
 
 #define DEV_MEM_SIZE 512
 
@@ -36,9 +37,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
         count = DEV_MEM_SIZE - *f_pos;
 
     /* Copy to user */
-    if(copy_to_user(buff, device_buffer[*f_pos], count)){
+    if(copy_to_user(buff, &device_buffer[*f_pos], count))
         return -EFAULT;
-    }
 
     /* Update the current file position */
     *f_pos += count;
@@ -53,8 +53,28 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
 ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, loff_t* f_pos)
 {
 
-    pr_info("write requested for %zu bytes\n", count);
-    return 0;
+    pr_info("Write requested for %zu bytes\n", count);
+    pr_info("Current file position = %lld\n", *f_pos);
+
+    /* Adjust the count */
+    if((*f_pos + count) > DEV_MEM_SIZE)
+        count = DEV_MEM_SIZE - *f_pos;
+
+    if(!count)
+        return -ENOMEM;
+
+    /* Copy from user */
+    if(copy_from_user(&device_buffer[*f_pos], buff, count))
+        return -EFAULT;
+
+    /* Update the current file position */
+    *f_pos += count;
+
+    pr_info("Number of bytes successfully written = %zu\n", count);
+    pr_info("Updated file position = %lld\n", *f_pos);
+
+    /* Return number of bytes which have been successfully written */
+    return count;
 }
 
 int pcd_open(struct inode* inode, struct file* p_file)
