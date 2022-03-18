@@ -1,4 +1,4 @@
-obj-m := pcd_device_setup.o
+obj-m := pcd_device_setup.o pcd_platform_drv.o
 
 ARCH=arm
 CROSS_COMPILE=/usr/bin/gcc-linaro-12.0.0-2022.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
