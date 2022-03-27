@@ -135,7 +135,7 @@ struct pcdev_platform_data* pcdev_get_platdata_from_dt(struct device* dev){
         return ERR_PTR(-ENOMEM);
     }
 
-    if(of_property_read_string(dev_node, "org,devvice-serial-num", &pdata->serial_number)){
+    if(of_property_read_string(dev_node, "org,device-serial-num", &pdata->serial_number)){
         dev_info(dev, "Missing serial number property\n");
         return ERR_PTR(-EINVAL);
     }
