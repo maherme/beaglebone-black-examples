@@ -1,9 +1,9 @@
 # Pseudo Char Driver
 
 For compiling you can use:
-´´´console
+```console
 make host
-´´´
+```
 
 For loading the kernel object:
 ```console
