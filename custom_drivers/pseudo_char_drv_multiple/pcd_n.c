@@ -201,7 +201,7 @@ int pcd_open(struct inode* inode, struct file* p_file){
 
     (!ret)?pr_info("open was successful\n"):pr_info("open was unsuccessful\n");
 
-    return 0;
+    return ret;
 }
 
 int pcd_release(struct inode* inode, struct file* p_file){
