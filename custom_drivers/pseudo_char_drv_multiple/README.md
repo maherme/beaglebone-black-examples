@@ -129,3 +129,20 @@ The ```dmesg``` output (observe the number of read bytes is 1024, the size of th
 [ 7852.730873] pcd_read : updated file position = 1024
 [ 7852.730882] pcd_release : release was successful
 ```
+
+## Using test_read Application:
+
+You can compile an application for testing the reading. This application read data from device 3. For compiling:
+```console
+make test
+```
+
+You need to write some data into the device 3 (write, at least, 100 or 200 bytes):
+```console
+echo "bla bla bla ... bla bla" > /dev/pcdev-3
+```
+
+Then you can read, for example, the first 100 bytes executing:
+```console
+./test_read 100
+```
