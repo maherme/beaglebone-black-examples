@@ -16,3 +16,6 @@ help:
 
 host:
 	make -C $(HOST_KERN_DIR) M=$(PWD) modules
+
+test:
+	gcc test_read.c -o test_read
