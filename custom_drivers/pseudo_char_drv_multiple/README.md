@@ -101,3 +101,31 @@ The ```dmesg``` output:
 [ 7331.087210] pcd_write : updated file position = 100
 [ 7331.087237] pcd_release : release was successful
 ```
+
+For reading the device 3:
+```console
+cat /dev/pcdev-3
+```
+
+The output:
+```console
+#include <linux/module.h>
+#include <linux/fs.h>
+#include <linux/cdev.h>
+#include <linux/device.h>
+#i
+```
+
+The ```dmesg``` output (observe the number of read bytes is 1024, the size of the memory for this device):
+```console
+[ 7852.730835] pcd_open : open was successful
+[ 7852.730847] pcd_read : read requested for 131072 bytes
+[ 7852.730849] pcd_read : current file position = 0
+[ 7852.730853] pcd_read : number of bytes successfully read = 1024
+[ 7852.730854] pcd_read : updated file position = 1024
+[ 7852.730869] pcd_read : read requested for 131072 bytes
+[ 7852.730870] pcd_read : current file position = 1024
+[ 7852.730871] pcd_read : number of bytes successfully read = 0
+[ 7852.730873] pcd_read : updated file position = 1024
+[ 7852.730882] pcd_release : release was successful
+```
