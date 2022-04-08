@@ -68,3 +68,36 @@ And using ```dmesg```:
 [ 6920.575873] pcd_write : updated file position = 512
 [ 6920.575888] pcd_release : release was successful
 ```
+
+You can test the reading of device 2:
+```console
+dd if=/dev/pcdev-2 of=file.txt count=1
+```
+
+You will get an error like this:
+```console
+dd: failed to open '/dev/pcdev-2': Operation not permitted
+```
+
+If you try the write and read process in device 3 (with bs=100 you order to write only 100 bytes):
+```console
+dd if=pcd_n.c of=/dev/pcdev-3 count=1 bs=100
+```
+
+The output:
+```console
+1+0 records in
+1+0 records out
+100 bytes copied, 0.000223722 s, 447 kB/s
+```
+
+The ```dmesg``` output:
+```console
+[ 7331.087137] pcd_open : minor access = 2
+[ 7331.087154] pcd_open : open was successful
+[ 7331.087204] pcd_write : write requested for 100 bytes
+[ 7331.087206] pcd_write : current file position = 0
+[ 7331.087208] pcd_write : number of bytes successfully written = 100
+[ 7331.087210] pcd_write : updated file position = 100
+[ 7331.087237] pcd_release : release was successful
+```
