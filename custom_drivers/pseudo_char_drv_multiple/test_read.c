@@ -34,10 +34,10 @@ int main(int argc, char* argv[]){
 
 #if 0
     /* Activate this code for testing lseek */
-    ret = lseek(fd, 0, SEEK_END);
+    ret = lseek(fd, 10, SEEK_SET);
     if(ret < 0){
         perror("lseek failed");
-        goto out;
+        goto close_fd;
     }
 #endif
 
@@ -69,7 +69,8 @@ int main(int argc, char* argv[]){
         printf("%c", buffer[i]);
     }
 
-out:
+close_fd:
     close(fd);
+out:
     return 0;
 }
