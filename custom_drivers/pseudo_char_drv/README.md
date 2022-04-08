@@ -1,4 +1,4 @@
-#Pseudo Char Driver
+# Pseudo Char Driver
 
 For compiling you can use:
 ´´´console
@@ -39,7 +39,7 @@ cat /dev/pcd
 dmesg | tail -10
 ```
 
-You will get an output like this:
+You will get an output like this (the number of read bytes is 512 because it is the size of the memory driver):
 ```console
 [ 1193.243847] pcd_open : open was successful
 [ 1193.243862] pcd_read : read requested for 131072 bytes
@@ -51,4 +51,22 @@ You will get an output like this:
 [ 1193.243881] pcd_read : number of bytes successfully read = 0
 [ 1193.243882] pcd_read : updated file position = 512
 [ 1193.243890] pcd_release : release was successful
+```
+You can also test an error for no memory space in the driver:
+```console
+cp test_file /dev/pcd
+dmesg | tail -9
+```
+
+You will get an output like this:
+```console
+[ 2064.957977] pcd_open : open was successful
+[ 2064.958066] pcd_write : write requested for 1024 bytes
+[ 2064.958073] pcd_write : current file position = 0
+[ 2064.958078] pcd_write : number of bytes successfully written = 512
+[ 2064.958082] pcd_write : updated file position = 512
+[ 2064.958089] pcd_write : write requested for 512 bytes
+[ 2064.958092] pcd_write : current file position = 512
+[ 2064.958096] pcd_write : No space left on the device
+[ 2064.958280] pcd_release : release was successful
 ```
