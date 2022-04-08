@@ -35,3 +35,13 @@ You will get an error due to this device has only read permission:
 [ 5960.275978] pcd_open : minor access = 0
 [ 5960.275985] pcd_open : open was unsuccessful
 ```
+
+Other way to test the write permission in device 1:
+```console
+strace dd if=pcd_n.c of=/dev/pcdev-1
+```
+
+In the output of this command you will find this line:
+```console
+openat(AT_FDCWD, "/dev/pcdev-1", O_WRONLY|O_CREAT|O_TRUNC, 0666) = -1 EPERM (Operation not permitted)
+```
