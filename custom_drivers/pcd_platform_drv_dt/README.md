@@ -12,7 +12,7 @@ You will need to have access to a linux kernel repository and U-Boot repository 
 - Include the file in am335x-boneblack.dts adding ```#include "am335x-boneblack-pcd.dtsi"```.
 - Compile for generating the am335x-boneblack.dtb file using:
 ```console
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x-boneblack.dtb
 ```
 - Place this file in the BOOT partition of your device (i.e. in the BOOT partiton of the uSD card).
 - Compile the platform driver:
