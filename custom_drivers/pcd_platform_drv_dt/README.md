@@ -4,7 +4,7 @@ You will need to have access to a linux kernel repository and U-Boot repository 
 | Software               | Version        |
 |:----------------------:|:--------------:|
 | u-boot                 | v2019.04       |
-| linux                  | 5.4            |
+| linux                  | 5.4.106+       |
 | gcc-linaro-gnueabihf   | 6.4.1-2017.11  |
 
 ## Testing Process
