@@ -10,7 +10,7 @@ You will need to have access to a linux kernel repository and U-Boot repository 
 ## Testing Process
 - Place the [am335x-boneblack-pcd.dtsi](am335x-boneblack-pcd.dtsi) into the linux kernel repository, in /arch/arm/boot/dts folder.
 - Include the file in am335x-boneblack.dts adding ```#include "am335x-boneblack-pcd.dtsi"```.
-- Compile for generating the Device Tree Blob file (am335x-boneblack.dtb) using:
+- Compile for generating the Device Tree Blob file (am335x-boneblack.dtb) using (you need to execute this command in the linux kernel root directory):
 ```console
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x-boneblack.dtb
 ```
