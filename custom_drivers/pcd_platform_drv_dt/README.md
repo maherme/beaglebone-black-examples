@@ -23,4 +23,6 @@ make all
 ```console
 scp *.ko debian@192.168.7.2:/home/debian/drivers
 ```
-- Connect to the Beaglebone Black opening a terminal (i.e. minicom) and install the module using ```ìnsmod```.
+- Connect to the Beaglebone Black opening a terminal (i.e. minicom) and reboot it.
+- After the reboot you can watch the devices detected in /sys/devices/platform directory.
+- You can load the generated kernel modules using ```ìnsmod```, the probe function will be executed 4 times.
