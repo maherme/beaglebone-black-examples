@@ -1,5 +1,7 @@
 # Pseudo Char Platfor Driver Using Device Tree Overlay
 
+This example is based on [pcd_platform_drv_dt](../pcd_platform_drv_dt) example. The same .c files are used for this example.
+
 For compiling the device tree overlay:
 ```console
 dtc -@ -I dts -O dtb -o PCDEV0.dtbo PCDEV0.dts
