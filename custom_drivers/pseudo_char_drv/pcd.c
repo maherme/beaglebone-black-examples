@@ -5,12 +5,15 @@
 #include <linux/kdev_t.h>
 #include <linux/uaccess.h>
 #include <linux/err.h>
+#include <linux/mutex.h>
 
 #define DEV_MEM_SIZE 512
 
 /** @brief This modify pr_info for printing the function name */
 #undef pr_fmt
 #define pr_fmt(fmt) "%s : " fmt,__func__
+
+static DEFINE_MUTEX(pcd_lock);
 
 /** @brief pseudo device's memory */
 char device_buffer[DEV_MEM_SIZE];
@@ -58,6 +61,10 @@ loff_t pcd_lseek(struct file* p_file, loff_t offset, int whence){
 ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f_pos)
 {
 
+    if(mutex_lock_interruptible(&pcd_lock)){
+        return -EINTR;
+    }
+
     pr_info("read requested for %zu bytes\n", count);
     pr_info("current file position = %lld\n", *f_pos);
 
@@ -75,12 +82,18 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     pr_info("number of bytes successfully read = %zu\n", count);
     pr_info("updated file position = %lld\n", *f_pos);
 
+    mutex_unlock(&pcd_lock);
+
     /* Return number of bytes which have been successfully read */
     return count;
 }
 
 ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, loff_t* f_pos)
 {
+
+    if(mutex_lock_interruptible(&pcd_lock)){
+        return -EINTR;
+    }
 
     pr_info("write requested for %zu bytes\n", count);
     pr_info("current file position = %lld\n", *f_pos);
@@ -103,6 +116,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 
     pr_info("number of bytes successfully written = %zu\n", count);
     pr_info("updated file position = %lld\n", *f_pos);
+
+    mutex_unlock(&pcd_lock);
 
     /* Return number of bytes which have been successfully written */
     return count;

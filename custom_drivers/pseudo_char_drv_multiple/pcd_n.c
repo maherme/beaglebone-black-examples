@@ -5,6 +5,7 @@
 #include <linux/kdev_t.h>
 #include <linux/uaccess.h>
 #include <linux/err.h>
+#include <linux/mutex.h>
 
 #define RDONLY              0x01
 #define WRONLY              0x10
@@ -34,6 +35,7 @@ struct pcdev_private_data{
     const char* serial_number;
     int perm;
     struct cdev cdev;
+    struct mutex pcdev_lock;
 };
 
 /** @brief Private data structure */
@@ -116,6 +118,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     struct pcdev_private_data* pcdev_data = (struct pcdev_private_data*)p_file->private_data;
     int max_size = pcdev_data->size;
 
+    mutex_lock(&pcdev_data->pcdev_lock);
+
     pr_info("read requested for %zu bytes\n", count);
     pr_info("current file position = %lld\n", *f_pos);
 
@@ -133,6 +137,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     pr_info("number of bytes successfully read = %zu\n", count);
     pr_info("updated file position = %lld\n", *f_pos);
 
+    mutex_unlock(&pcdev_data->pcdev_lock);
+
     /* Return number of bytes which have been successfully read */
     return count;
 }
@@ -141,6 +147,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 
     struct pcdev_private_data* pcdev_data = (struct pcdev_private_data*)p_file->private_data;
     int max_size = pcdev_data->size;
+
+    mutex_lock(&pcdev_data->pcdev_lock);
 
     pr_info("write requested for %zu bytes\n", count);
     pr_info("current file position = %lld\n", *f_pos);
@@ -163,6 +171,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 
     pr_info("number of bytes successfully written = %zu\n", count);
     pr_info("updated file position = %lld\n", *f_pos);
+
+    mutex_unlock(&pcdev_data->pcdev_lock);
 
     /* Return number of bytes which have been successfully written */
     return count;
@@ -241,6 +251,9 @@ static int __init pcd_driver_init(void){
     for(i = 0; i < NO_OF_DEVICES; i++){
         pr_info("Device number <major>:<minor> = %d:%d\n", MAJOR(pcdrv_data.device_number+i),
                                                            MINOR(pcdrv_data.device_number+i));
+
+        /* Initialize the mutex for each device */
+        mutex_init(&pcdrv_data.pcdev_data[i].pcdev_lock);
 
         /* Initialize the cdev structure with fops */
         cdev_init(&pcdrv_data.pcdev_data[i].cdev, &pcd_fops);

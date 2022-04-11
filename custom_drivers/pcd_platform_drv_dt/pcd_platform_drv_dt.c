@@ -9,6 +9,7 @@
 #include <linux/mod_devicetable.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+#include <linux/mutex.h>
 #include "platform.h"
 
 #undef pr_fmt
@@ -22,6 +23,7 @@ struct pcdev_private_data{
     char* buffer;
     dev_t dev_num;
     struct cdev cdev;
+    struct mutex pcd_lock;
 };
 
 /* Driver private data structure */
@@ -109,6 +111,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     struct pcdev_private_data* pcdev_data = (struct pcdev_private_data*)p_file->private_data;
     int max_size = pcdev_data->pdata.size;
 
+    mutex_lock(&pcdev_data->pcd_lock);
+
     pr_info("Read requested for %zu bytes \n", count);
     pr_info("Current file position = %lld\n", *f_pos);
 
@@ -125,6 +129,8 @@ ssize_t pcd_read(struct file* p_file, char __user* buff, size_t count, loff_t* f
     pr_info("Number of bytes successfully read = %zu\n", count);
     pr_info("Updated file position = %lld\n", *f_pos);
 
+    mutex_unlock(&pcdev_data->pcd_lock);
+
     return count;
 }
 
@@ -132,6 +138,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 
     struct pcdev_private_data* pcdev_data = (struct pcdev_private_data*)p_file->private_data;
     int max_size = pcdev_data->pdata.size;
+
+    mutex_lock(&pcdev_data->pcd_lock);
 
     pr_info("Write requested for %zu bytes\n", count);
     pr_info("Current file position = %lld\n", *f_pos);
@@ -153,6 +161,8 @@ ssize_t pcd_write(struct file* p_file, const char __user* buff, size_t count, lo
 
     pr_info("Number of bytes successfully written = %zu\n", count);
     pr_info("Updated file position = %lld\n", *f_pos);
+
+    mutex_unlock(&pcdev_data->pcd_lock);
 
     return count;
 }
@@ -290,6 +300,9 @@ int pcd_platform_driver_probe(struct platform_device* pdev){
         dev_info(dev, "Cannot allocate memory\n");
         return -ENOMEM;
     }
+
+    /* Initialize the lock mechanism for mutex */
+    mutex_init(&dev_data->pcd_lock);
 
     /* Save the device private data pointer in the platform device structure */
     dev_set_drvdata(&pdev->dev, dev_data);

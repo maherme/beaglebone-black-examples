@@ -23,18 +23,28 @@ struct file_operations pcd_fops = {
 
 ssize_t show_serial_num(struct device* dev, struct device_attribute* attr, char* buf){
 
+    int ret;
     /* Get access to the device private data */
     struct pcdev_private_data* dev_data = dev_get_drvdata(dev->parent);
 
-    return sprintf(buf, "%s\n", dev_data->pdata.serial_number);
+    mutex_lock(&dev_data->pcd_lock);
+    ret = sprintf(buf, "%s\n", dev_data->pdata.serial_number);
+    mutex_unlock(&dev_data->pcd_lock);
+
+    return ret;
 }
 
 ssize_t show_max_size(struct device* dev, struct device_attribute* attr, char* buf){
 
+    int ret;
     /* Get access to the device private data */
     struct pcdev_private_data* dev_data = dev_get_drvdata(dev->parent);
 
-    return sprintf(buf, "%d\n", dev_data->pdata.size);
+    mutex_lock(&dev_data->pcd_lock);
+    ret = sprintf(buf, "%d\n", dev_data->pdata.size);
+    mutex_unlock(&dev_data->pcd_lock);
+
+    return ret;
 }
 
 ssize_t store_max_size(struct device* dev, struct device_attribute* attr, const char* buf, size_t count){
@@ -43,12 +53,16 @@ ssize_t store_max_size(struct device* dev, struct device_attribute* attr, const 
     int ret;
     struct pcdev_private_data* dev_data = dev_get_drvdata(dev->parent);
 
+    mutex_lock(&dev_data->pcd_lock);
+
     ret = kstrtol(buf, 10, &result);
     if(ret)
         return ret;
 
     dev_data->pdata.size = result;
     dev_data->buffer = krealloc(dev_data->buffer, dev_data->pdata.size, GFP_KERNEL);
+
+    mutex_unlock(&dev_data->pcd_lock);
 
     return count;
 }
