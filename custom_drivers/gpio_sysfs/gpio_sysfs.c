@@ -230,6 +230,9 @@ void __exit gpio_sysfs_exit(void){
     class_destroy(gpio_drv_data.class_gpio);
 }
 
+module_init(gpio_sysfs_init);
+module_exit(gpio_sysfs_exit);
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("maherme");
 MODULE_DESCRIPTION("Gpio sysfs driver");
