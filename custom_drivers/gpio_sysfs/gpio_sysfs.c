@@ -57,6 +57,22 @@ static DEVICE_ATTR_RW(direction);
 static DEVICE_ATTR_RW(value);
 static DEVICE_ATTR_RO(label);
 
+static struct attribute* gpio_attrs[] = {
+    &dev_attr_direction.attr,
+    &dev_attr_value.attr,
+    &dev_attr_label.attr,
+    NULL
+};
+
+static struct attribute_group gpio_attr_group = {
+    .attrs = gpio_attrs
+};
+
+static const struct attribute_group* gpio_attr_groups[] = {
+    &gpio_attr_group,
+    NULL
+};
+
 int gpio_sysfs_remove(struct platform_device* pdev){
 
     return 0;
@@ -71,6 +87,7 @@ int gpio_sysfs_probe(struct platform_device* pdev){
     struct gpio_dev_private_data* dev_data;
     int i = 0;
     int ret;
+    struct device* dev_sysfs;
 
     for_each_available_child_of_node(parent, child){
         dev_data = devm_kzalloc(dev, sizeof(*dev_data), GFP_KERNEL);
@@ -102,6 +119,17 @@ int gpio_sysfs_probe(struct platform_device* pdev){
         ret = gpiod_direction_output(dev_data->desc, 0);
         if(ret){
             dev_err(dev, "gpio direction set failed\n");
+        }
+        /* Create devices under /sys/class/bone_gpios */
+        dev_sysfs = device_create_with_groups(gpio_drv_data.class_gpio,
+                                              dev,
+                                              0,
+                                              dev_data,
+                                              gpio_attr_groups,
+                                              dev_data->label);
+        if(IS_ERR(dev_sysfs)){
+            dev_err(dev, "Error in device_create\n");
+            return PTR_ERR(dev_sysfs);
         }
         i++;
     }
