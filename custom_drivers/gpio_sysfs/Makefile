@@ -1,7 +1,7 @@
 obj-m := gpio_sysfs.o
 
 ARCH=arm
-CROSS_COMPILE=/usr/bin/gcc-linaro-12.0.0-2022.01-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
+CROSS_COMPILE=/usr/bin/gcc-linaro-6.4.1-2017.11-x86_64_arm-linux-gnueabihf/bin/arm-linux-gnueabihf-
 KERN_DIR=~/Projects/BeagleBoneBlack/linux/
 HOST_KERN_DIR=/lib/modules/$(shell uname -r)/build/
 
