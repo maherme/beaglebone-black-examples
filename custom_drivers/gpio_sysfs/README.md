@@ -87,10 +87,13 @@ gpio2.2  gpio2.3  gpio2.4  usrled0:gpio1.21  usrled1:gpio2.22  usrled2:gpio1.23
 ```console
 root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# ls
 device  direction  label  power  subsystem  uevent  value
-root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# cat label 
-usrled0:gpio1.21
 root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# cat direction 
 out
+root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# cat label 
+usrled0:gpio1.21
 root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# cat value 
 0
+root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# echo 1 > value 
+root@beaglebone:/sys/class/bone_gpios/usrled0:gpio1.21# cat value 
+1
 ```
