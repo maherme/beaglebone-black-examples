@@ -8,3 +8,4 @@ This is a list of different device drivers:
 - [pcd_platform_drv_dt](pcd_platform_drv_dt): a pseudo character platform driver which uses the device tree.
 - [pcd_platform_drv_dt_ov](pcd_platform_drv_dt_ov): a pseudo character platform driver which uses the device tree overlay.
 - [pcd_sysfs](pcd_sysfs): a pseudo character platform driver which uses the sys filesystem.
+- [gpio_sysfs](gpio_sysfs): a gpio driver.
