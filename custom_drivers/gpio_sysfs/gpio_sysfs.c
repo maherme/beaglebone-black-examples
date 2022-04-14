@@ -102,7 +102,7 @@ ssize_t value_store(struct device* dev, struct device_attribute* attr, const cha
 
     gpiod_set_value(dev_data->desc, value);
 
-    mutex_lock(&dev_data->dev_lock);
+    mutex_unlock(&dev_data->dev_lock);
 
     return count;
 }
