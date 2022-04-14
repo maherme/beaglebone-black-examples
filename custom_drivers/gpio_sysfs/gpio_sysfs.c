@@ -9,6 +9,7 @@
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/gpio/consumer.h>
+#include <linux/mutex.h>
 #include <asm/uaccess.h>
 
 #undef pr_fmt
@@ -18,6 +19,7 @@
 struct gpio_dev_private_data{
     char label[20];
     struct gpio_desc* desc;
+    struct mutex dev_lock;
 };
 
 /* Driver private data structure */
@@ -35,12 +37,16 @@ ssize_t direction_show(struct device* dev, struct device_attribute* attr, char* 
     int dir;
     char* direction;
 
+    mutex_lock(&dev_data->dev_lock);
+
     dir = gpiod_get_direction(dev_data->desc);
     if(dir < 0){
         return dir;
     }
     /* If dir is 0 show "out", if dir is 1 show "in" */
      direction = (dir == 0)?"out":"in";
+
+     mutex_unlock(&dev_data->dev_lock);
 
     return sprintf(buf, "%s\n", direction);
 }
@@ -49,6 +55,8 @@ ssize_t direction_store(struct device* dev, struct device_attribute* attr, const
 
     struct gpio_dev_private_data* dev_data = dev_get_drvdata(dev);
     int ret;
+
+    mutex_lock(&dev_data->dev_lock);
 
     if(sysfs_streq(buf, "in")){
         ret = gpiod_direction_input(dev_data->desc);
@@ -60,6 +68,8 @@ ssize_t direction_store(struct device* dev, struct device_attribute* attr, const
         ret = -EINVAL;
     }
 
+    mutex_unlock(&dev_data->dev_lock);
+
     return ret?:count;;
 }
 
@@ -68,7 +78,11 @@ ssize_t value_show(struct device* dev, struct device_attribute* attr, char* buf)
     struct gpio_dev_private_data* dev_data = dev_get_drvdata(dev);
     int value;
 
+    mutex_lock(&dev_data->dev_lock);
+
     value = gpiod_get_value(dev_data->desc);
+
+    mutex_unlock(&dev_data->dev_lock);
 
     return sprintf(buf, "%d\n", value);
 }
@@ -79,12 +93,16 @@ ssize_t value_store(struct device* dev, struct device_attribute* attr, const cha
     int ret;
     long value;
 
+    mutex_lock(&dev_data->dev_lock);
+
     ret = kstrtol(buf, 0, &value);
     if(ret){
         return ret;
     }
 
     gpiod_set_value(dev_data->desc, value);
+
+    mutex_lock(&dev_data->dev_lock);
 
     return count;
 }
