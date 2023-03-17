@@ -1,5 +1,30 @@
 # Pseudo Char Driver
 
+This is a pseudo character driver implementation.  
+The driver manages a memory region in the hardware allowing to the user to access this memory for performing write and read operations. This region is defined as ```char device_buffer[DEV_MEM_SIZE];``` where ```DEV_MEM_SIZE``` is set to 512 bytes.  
+This driver implements:  
+- llseek as pcd_llseek.
+- read as pcd_read.
+- write as pcd_write.
+- open as pcd_open.
+- release as pcd_release.
+
+When the driver is registered in the virtual file system the user can access to the driver in ```/dev/pcd``` and ```/sys/class/pcd_class/pcd```.
+
+```mermaid
+  flowchart LR
+    subgraph kernel space
+      A(Memory Buffer) --- B(pcd.c driver)
+      B --- C(VFS)
+    end
+    subgraph user space
+      C --- D(/dev/pcd)
+      C --- E(/sys/class/pcd_class/pcd)
+    end
+```
+
+## Compile
+
 For compiling you can use:
 ```console
 make host
@@ -14,6 +39,7 @@ You can watch the printed information using (this command shows the last 5 lines
 ```console
 dmesg | tail -5
 ```
+## Test
 
 For testing the write function:
 ```console
