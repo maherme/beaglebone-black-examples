@@ -29,7 +29,6 @@ A diagram showing an overview is here:
     end
     subgraph Kernel Space
       subgraph pcdev [pcdev driver pcd.c]
-        direction TB
         B1(pcd_lseek)
         B2(pcd_read)
         B3(pcd_write)
