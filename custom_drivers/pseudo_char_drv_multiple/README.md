@@ -28,7 +28,7 @@ A diagram showing an overview is here:
       A4(Memory Buffer 4)
     end
     subgraph Kernel Space
-      subgraph pcdev [pcdev driver pcd.c]
+      subgraph pcdev [pcdev driver pcd_n.c]
         B1(pcd_lseek)
         B2(pcd_read)
         B3(pcd_write)
