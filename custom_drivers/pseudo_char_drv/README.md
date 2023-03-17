@@ -18,8 +18,15 @@ A diagram showing an overview is here:
       A(Memory Buffer)
     end
     subgraph Kernel Space
-      A --- B(pcd.c driver)
-      B --- |pcd_lseek\n pcd_read\n pcd_write\n pcd_open\n pcd_release|C(VFS)
+      subgraph pcdev [pcdev driver pcd.c]
+        B1(pcd_lseek)
+        B2(pcd_read)
+        B3(pcd_write)
+        B4(pcd_open)
+        B5(pcd_release)
+      end
+      A --- pcdev
+      pcdev --- C(Virtual File System)
     end
     subgraph User Space
       C --- D(/dev/pcd)
