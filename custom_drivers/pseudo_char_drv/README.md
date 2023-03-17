@@ -9,15 +9,19 @@ This driver implements:
 - open as pcd_open.
 - release as pcd_release.
 
-When the driver is registered in the virtual file system the user can access to the driver in ```/dev/pcd``` and ```/sys/class/pcd_class/pcd```.
+When the driver is registered in the virtual file system (VFS) the user can access to the driver in ```/dev/pcd``` and ```/sys/class/pcd_class/pcd```.  
+A diagram showing an overview is here:
 
 ```mermaid
-  flowchart LR
-    subgraph kernel space
-      A(Memory Buffer) --- B(pcd.c driver)
-      B --- C(VFS)
+  flowchart BT
+    subgraph Hardware
+      A(Memory Buffer)
     end
-    subgraph user space
+    subgraph Kernel Space
+      A --- B(pcd.c driver)
+      B --- |pcd_lseek\n pcd_read\n pcd_write\n pcd_open\n pcd_release|C(VFS)
+    end
+    subgraph User Space
       C --- D(/dev/pcd)
       C --- E(/sys/class/pcd_class/pcd)
     end
