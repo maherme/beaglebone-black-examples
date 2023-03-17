@@ -1,9 +1,80 @@
 # Pseudo Char Driver for Multiple Devices
 
+This is a multi device pseudo character driver implementation.  
+The driver manages one memory region in the hardware for each device (4 devices are implemented), allowing to the user to access this memory for performing write and read operations. This region is defined as ```char device_buffer_pcdevx[MEM_SIZE_MAX_PCDEVX];``` for x from 1 to 4. Each device has some particular data in addition of the memory size, these are a serial number and an access permission. These data are listed below:
+
+|                    | pcdev-1      | pcdev-2      | pcdev-3      | pcdev-4      |
+|:------------------:|:------------:|:------------:|:------------:|:------------:|
+| Size (bytes)       | 1024         | 512          | 1024         | 512          |
+| Serial Number      | PCDEV1XYZ123 | PCDEV2XYZ123 | PCDEV3XYZ123 | PCDEV4XYZ123 |
+| Access Permissions | RDONLY       | WRONLY       | RDWR         | RDWR         |
+
+This driver implements:  
+- llseek as pcd_llseek.
+- read as pcd_read.
+- write as pcd_write.
+- open as pcd_open.
+- release as pcd_release.
+
+When the driver is registered in the virtual file system (VFS) the user can access to the devices in ```/dev/pcdev-1```, ```/dev/pcdev-2```, ```/dev/pcdev-3```, ```/dev/pcdev-4```.  
+A diagram showing an overview is here:
+
+```mermaid
+  flowchart BT
+    subgraph Hardware
+      A1(Memory Buffer 1)
+      A2(Memory Buffer 2)
+      A3(Memory Buffer 3)
+      A4(Memory Buffer 4)
+    end
+    subgraph Kernel Space
+      subgraph pcdev [pcdev driver pcd.c]
+        direction TB
+        B1(pcd_lseek)
+        B2(pcd_read)
+        B3(pcd_write)
+        B4(pcd_open)
+        B5(pcd_release)
+      end
+      A1 --- pcdev
+      A2 --- pcdev
+      A3 --- pcdev
+      A4 --- pcdev
+      pcdev --- C(Virtual File System)
+    end
+    subgraph User Space
+      subgraph pcdev-1
+        direction TB
+        D(/dev/pcdev-1) ~~~ E(/sys/class/pcd_class/pcdev-1)
+      end
+      subgraph pcdev-2
+        direction TB
+        F(/dev/pcdev-2) ~~~ G(/sys/class/pcd_class/pcdev-2)
+      end
+      subgraph pcdev-3
+        direction TB
+        H(/dev/pcdev-3) ~~~ I(/sys/class/pcd_class/pcdev-3)
+      end
+      subgraph pcdev-4
+        direction TB
+        J(/dev/pcdev-4) ~~~ K(/sys/class/pcd_class/pcdev-4)
+      end
+    end
+    C --- pcdev-1
+    C --- pcdev-2
+    C --- pcdev-3
+    C --- pcdev-4
+```
+
+## Compile
+
 For compiling the driver:
 ```console
 make host
 ```
+
+## Test
+
 For loading the kernel object:
 ```console
 sudo insmod pcd_n.ko
