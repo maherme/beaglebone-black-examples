@@ -12,7 +12,7 @@ The driver manages one memory region in the hardware for each device (4 devices 
 | Serial Number      | PCDEVABC1111 | PCDEVXYZ2222 | PCDEVXYZ3333 | PCDEVXYZ4444 |
 | Access Permissions | RDWR         | RDWR         | RDONLY       | WRONLY       |
 
-The needed memory for each driver is reserved dinamically using [devm_kmalloc](https://docs.kernel.org/driver-api/driver-model/devres.html) function. You can notice there is any call to ```devm_kfree``` function in the probe function if a failure happens; this is due to the probe function is called by the ```really_probe``` function (you can check this function in the [dd.c](https://github.com/torvalds/linux/blob/master/drivers/base/dd.c) file), and in this function, if the bind process fails, the ```devres_release_all``` function is called, this function releases all reserved resources done during the probe process; for this reason any call to ```devm_kfree``` function is needed.
+The needed memory for each driver is reserved dinamically using [devm_kmalloc](https://docs.kernel.org/driver-api/driver-model/devres.html) function in the probe process. You can notice there is not any call to ```devm_kfree``` function in the probe function if a failure happens; this is due to the probe function is called by the ```really_probe``` function (you can check this function in the [dd.c](https://github.com/torvalds/linux/blob/master/drivers/base/dd.c) file), and in this function, if the bind process fails, the ```devres_release_all``` function is called. This function releases all reserved resources done during the probe process; for this reason any call to ```devm_kfree``` function is not needed.
 
 This driver implements:  
 - llseek as pcd_llseek.
