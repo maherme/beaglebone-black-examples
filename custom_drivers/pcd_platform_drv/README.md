@@ -75,19 +75,19 @@ A diagram showing an overview is here:
     subgraph User Space
       subgraph pcdev-0
         direction TB
-        D1(/dev/pcdev-0) ~~~ D2(/sys/class/pcd_class/pcdev-0) ~~~ D3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-A1x.0)
+        D1(/dev/pcdev-0) ~~~ D2(/sys/class/pcd_class/pcdev-0) ~~~ D3(/sys/devices/platform/pcdev-A1x.0)
       end
       subgraph pcdev-1
         direction TB
-        E1(/dev/pcdev-1) ~~~ E2(/sys/class/pcd_class/pcdev-1) ~~~ E3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-B1x.0)
+        E1(/dev/pcdev-1) ~~~ E2(/sys/class/pcd_class/pcdev-1) ~~~ E3(/sys/devices/platform/pcdev-B1x.1)
       end
       subgraph pcdev-2
         direction TB
-        F1(/dev/pcdev-2) ~~~ F2(/sys/class/pcd_class/pcdev-2) ~~~ F3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-C1x.0)
+        F1(/dev/pcdev-2) ~~~ F2(/sys/class/pcd_class/pcdev-2) ~~~ F3(/sys/devices/platform/pcdev-C1x.2)
       end
       subgraph pcdev-3
         direction TB
-        G1(/dev/pcdev-3) ~~~ G2(/sys/class/pcd_class/pcdev-3) ~~~ G3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-D1x.0)
+        G1(/dev/pcdev-3) ~~~ G2(/sys/class/pcd_class/pcdev-3) ~~~ G3(/sys/devices/platform/pcdev-D1x.3)
       end
     end
     C --- pcdev-0
