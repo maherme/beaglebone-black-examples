@@ -1,12 +1,12 @@
 # Pseudo Character Device Platform Driver
 
 This is a multi device platform driver implementation, the driver is divided into two kernel objects:
-- [pcd_device_setup](pcd_device_setup.c): in this module 4 platform devices (pcdev-x with x from 1 to 4) are created and initialized. In this module the platform devices are registered with the linux kernel.
+- [pcd_device_setup](pcd_device_setup.c): in this module 4 platform devices (pcdev-x with x from 0 to 3) are created and initialized. In this module the platform devices are registered with the linux kernel.
 - [pcd_platform_drv](pcd_platform_drv.c): in this module all device files are created and all file operations are implemented.
 
 The driver manages one memory region in the hardware for each device (4 devices are implemented), allowing to the user to access this memory for performing write and read operations. Each device has some particular data like the buffer memory size, a serial number and an access permission. These data are stored in a ```pcdev_platform_data``` struct in the [pcd_device_setup.c](pcd_device_setup.c) file and they are listed below:
 
-|                    | pcdev-1      | pcdev-2      | pcdev-3      | pcdev-4      |
+|                    | pcdev-0      | pcdev-1      | pcdev-2      | pcdev-3      |
 |:------------------:|:------------:|:------------:|:------------:|:------------:|
 | Size (bytes)       | 512          | 1024         | 128          | 32           |
 | Serial Number      | PCDEVABC1111 | PCDEVXYZ2222 | PCDEVXYZ3333 | PCDEVXYZ4444 |
@@ -33,12 +33,68 @@ struct platform_device_id pcdevs_ids[] = {
 ```
 In addition some dummy configuration parameters are set for each driver; these parameters are configured using the ```driver_data``` field of the ```platform_device_id``` struct. You can find this configuration in the table below:
 
-|                    | pcdev-1      | pcdev-2      | pcdev-3      | pcdev-4      |
+|                    | pcdev-0      | pcdev-1      | pcdev-2      | pcdev-3      |
 |:------------------:|:------------:|:------------:|:------------:|:------------:|
 | Config item 1      | 60           | 50           | 40           | 30           |
 | Config item 2      | 21           | 22           | 23           | 24           |
 
 When the driver is registered in the platform bus the user can access to the devices in ```/dev/pcdev-1```, ```/dev/pcdev-2```, ```/dev/pcdev-3```, ```/dev/pcdev-4```.  
+
+A diagram showing an overview is here:
+
+```mermaid
+  flowchart BT
+    subgraph Hardware
+      A1(Memory Buffer 1)
+      A2(Memory Buffer 2)
+      A3(Memory Buffer 3)
+      A4(Memory Buffer 4)
+    end
+    subgraph Kernel Space
+      subgraph pcd_platform_driver [pcd platform driver]
+        subgraph pcd_plat_drv [pcd platform driver pcd_platform_drv.c]
+          B1(pcd_lseek)
+          B2(pcd_read)
+          B3(pcd_write)
+          B4(pcd_open)
+          B5(pcd_release)
+          B6(pcd_platform_driver_probe)
+          B7(pcd_platform_driver_remove)
+        end
+        subgraph pcd_dev_setup [pcd device setput pcd_device_setup.c]
+          B8(pcdev_platform_init)
+          B9(pcdev_platform_exit)
+        end
+      end
+      A1 --- pcd_platform_driver
+      A2 --- pcd_platform_driver
+      A3 --- pcd_platform_driver
+      A4 --- pcd_platform_driver
+      pcd_platform_driver --- C(Platform Bus)
+    end
+    subgraph User Space
+      subgraph pcdev-0
+        direction TB
+        D1(/dev/pcdev-0) ~~~ D2(/sys/class/pcd_class/pcdev-0) ~~~ D3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-A1x.0)
+      end
+      subgraph pcdev-1
+        direction TB
+        E1(/dev/pcdev-1) ~~~ E2(/sys/class/pcd_class/pcdev-1) ~~~ E3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-B1x.0)
+      end
+      subgraph pcdev-2
+        direction TB
+        F1(/dev/pcdev-2) ~~~ F2(/sys/class/pcd_class/pcdev-2) ~~~ F3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-C1x.0)
+      end
+      subgraph pcdev-3
+        direction TB
+        G1(/dev/pcdev-3) ~~~ G2(/sys/class/pcd_class/pcdev-3) ~~~ G3(/sys/bus/platform/drivers/pseudo-char-device/pcdev-D1x.0)
+      end
+    end
+    C --- pcdev-0
+    C --- pcdev-1
+    C --- pcdev-2
+    C --- pcdev-3
+```
 
 ## Compile
 
