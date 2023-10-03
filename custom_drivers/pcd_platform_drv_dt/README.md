@@ -42,25 +42,33 @@ You can explore this macro in the [of.h](https://elixir.bootlin.com/linux/latest
 
 ---
 
-You will need to have access to a linux kernel repository and U-Boot repository for testing this driver. For this example I will use this versions:
-| Software               | Version        |
-|:----------------------:|:--------------:|
-| u-boot                 | v2019.04       |
-| linux                  | 5.4.106+       |
-| gcc-linaro-gnueabihf   | 6.4.1-2017.11  |
+## Compile
 
-## Testing Process
+You will need to have access to a linux kernel repository for compiling the device tree:
+
 - Place the [am335x-boneblack-pcd.dtsi](am335x-boneblack-pcd.dtsi) into the linux kernel repository, in /arch/arm/boot/dts folder.
 - Include the file in am335x-boneblack.dts adding ```#include "am335x-boneblack-pcd.dtsi"```.
 - Compile for generating the Device Tree Blob file (am335x-boneblack.dtb) using (you need to execute this command in the linux kernel root directory):
 ```console
 make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x-boneblack.dtb
 ```
-- Place this file in the BOOT partition of your device (i.e. in the BOOT partiton of the uSD card).
+
 - Compile the platform driver:
 ```console
 make all
 ```
+
+## Test
+
+For testing I will use these versions:
+
+| Software               | Version        |
+|:----------------------:|:--------------:|
+| u-boot                 | v2019.04       |
+| linux                  | 5.4.106+       |
+| gcc-linaro-gnueabihf   | 6.4.1-2017.11  |
+
+- Place the am335x-boneblack.dtb file in the BOOT partition of your device (i.e. in the BOOT partiton of the uSD card).
 - Place the generated kernel object into the Beaglebone Black, i.e. using scp command:
 ```console
 scp *.ko debian@192.168.7.2:/home/debian/drivers
@@ -68,3 +76,43 @@ scp *.ko debian@192.168.7.2:/home/debian/drivers
 - Connect to the Beaglebone Black opening a terminal (i.e. minicom) and reboot it.
 - After the reboot you can watch the devices detected in /sys/devices/platform directory.
 - You can load the generated kernel modules using ```ìnsmod```, the probe function will be executed 4 times.
+
+The device tree is deployed in /sys/firmware/devicetree/base directory:
+```console
+# ls /sys/firmware/devicetree/base/
+#address-cells    compatible        model             pcdev-3
+#size-cells       cpus              name              pcdev-4
+aliases           fixedregulator0   ocp               pmu@4b000000
+chosen            interrupt-parent  opp-table         serial-number
+clk_mcasp0        leds              pcdev-1           soc
+clk_mcasp0_fixed  memory@80000000   pcdev-2           sound
+```
+
+And also in /proc/device-tree directory:
+```console
+# ls /proc/device-tree/
+#address-cells    compatible        model             pcdev-3
+#size-cells       cpus              name              pcdev-4
+aliases           fixedregulator0   ocp               pmu@4b000000
+chosen            interrupt-parent  opp-table         serial-number
+clk_mcasp0        leds              pcdev-1           soc
+clk_mcasp0_fixed  memory@80000000   pcdev-2           sound
+```
+
+The /proc/device-tree is a symbolic link to /sys/firmware/devicetree/base so from the user space is better to use the /proc location.  
+You can access the device tree node properties through this directory:
+```console
+# ls /proc/device-tree/pcdev-1/
+compatible             org,device-serial-num  org,size
+name                   org,perm
+# cat /proc/device-tree/pcdev-1/name; echo
+pcdev-1
+# cat /proc/device-tree/pcdev-1/compatible; echo
+pcdev-A1x
+# hexdump -C /proc/device-tree/pcdev-1/org,perm
+00000000  00 00 00 11                                       |....|
+00000004
+# hexdump -C /proc/device-tree/pcdev-1/org,size 
+00000000  00 00 02 00                                       |....|
+00000004
+```
