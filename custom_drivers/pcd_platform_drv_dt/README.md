@@ -34,6 +34,14 @@ struct platform_driver pcd_platform_driver = {
 
 For a deep diving in the binding process you can explore the [platform_match](https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L1335) function in the kernel, placed in drivers/base/platform.c file.
 
+---
+**NOTE**
+
+For device tree functionality was provided by the kernel, the CONFIG_OF option must be set. You can use menuconfig for setting, but it is set by default.
+You can explore this macro in the [of.h](https://elixir.bootlin.com/linux/latest/source/include/linux/of.h#L158) kernel file placed in include/linux/of.h.
+
+---
+
 You will need to have access to a linux kernel repository and U-Boot repository for testing this driver. For this example I will use this versions:
 | Software               | Version        |
 |:----------------------:|:--------------:|
