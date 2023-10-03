@@ -32,7 +32,7 @@ struct platform_driver pcd_platform_driver = {
 };
 ```
 
-For diving deep in the binding process you can explore the [platform_match](https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L1335) function in the kernel, placed in drivers/base/platform.c file.
+For a deep diving in the binding process you can explore the [platform_match](https://elixir.bootlin.com/linux/latest/source/drivers/base/platform.c#L1335) function in the kernel, placed in drivers/base/platform.c file.
 
 You will need to have access to a linux kernel repository and U-Boot repository for testing this driver. For this example I will use this versions:
 | Software               | Version        |
