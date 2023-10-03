@@ -60,7 +60,7 @@ make all
 
 ## Test
 
-For testing I will use these versions:
+For testing I used these versions:
 
 | Software               | Version        |
 |:----------------------:|:--------------:|
