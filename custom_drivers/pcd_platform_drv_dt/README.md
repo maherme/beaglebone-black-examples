@@ -1,5 +1,5 @@
 # Pseudo Char Platform Driver Using Device Tree
-This is a similar driver to [pcd_platform_drv](../pcd_platform_drv), but here I am abstracting some features of the driver using the device tree as the serial number, the memory size and the permissions of each device. You can find the details in the [arm335x-boneblack-pcd.dtsi](arm335x-boneblack-pcd.dtsi) file:
+This is a similar driver to [pcd_platform_drv](../pcd_platform_drv), but here I am using the device tree for abstracting some features of the driver as the serial number, the memory size and the permissions of each device. You can find the details in the [arm335x-boneblack-pcd.dtsi](arm335x-boneblack-pcd.dtsi) file:
 |                    | pcdev-0      | pcdev-1      | pcdev-2      | pcdev-3      |
 |:------------------:|:------------:|:------------:|:------------:|:------------:|
 | Size (bytes)       | 512          | 1024         | 256          | 2048         |
