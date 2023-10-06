@@ -1,6 +1,14 @@
-# GPIO Driver
+# GPIO Sysfs Driver
 
-This is a driver for controlling the GPIO.
+This is a driver for controlling the GPIOs through the Sysfs interface.
+The driver supports the below functionality:
+- It creates a class "bone_gpios" under /sys/class. This is done using the kernel function class_create.
+- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function device_create.
+- It creates three sysfs files (attributes) for every device:
+  - direction: used to configure the GPIO direction ("in" or "out") with read/write permissions.
+  - value: used to get the state of the GPIO or to write a new value to the GPIO ("0" or "1") with read/write permissions.
+  - label: used to get the label of the GPIO with read only permissions.
+- It implements a show and store methods for the attributes.
 
 ## For Testing:
 
