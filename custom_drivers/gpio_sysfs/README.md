@@ -2,8 +2,8 @@
 
 This is a driver for controlling the GPIOs through the Sysfs interface.
 The driver supports the below functionality:
-- It creates a class "bone_gpios" under /sys/class. This is done using the kernel function [class_create]([gpio_sysfs.c#L234](https://elixir.bootlin.com/linux/latest/C/ident/class_create)).
-- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function [device_create]([gpio_sysfs.c#L202](https://elixir.bootlin.com/linux/latest/C/ident/device_create)).
+- It creates a class "bone_gpios" under /sys/class. This is done using the kernel function [class_create](https://elixir.bootlin.com/linux/latest/C/ident/class_create).
+- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function [device_create](https://elixir.bootlin.com/linux/latest/C/ident/device_create).
 - It creates three sysfs files (attributes) for every device:
   - direction: used to configure the GPIO direction ("in" or "out") with read/write permissions.
   - value: used to get the state of the GPIO or to write a new value to the GPIO ("0" or "1") with read/write permissions.
