@@ -2,15 +2,15 @@
 
 This is a driver for controlling the GPIOs through the Sysfs interface.
 The driver supports the below functionality:
-- It creates a class "bone_gpios" under /sys/class. This is done using the kernel function class_create.
-- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function device_create.
+- It creates a class "bone_gpios" under /sys/class. This is done using the kernel function [class_create](gpio_sysfs.c#L234).
+- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function [device_create](gpio_sysfs.c#L202).
 - It creates three sysfs files (attributes) for every device:
   - direction: used to configure the GPIO direction ("in" or "out") with read/write permissions.
   - value: used to get the state of the GPIO or to write a new value to the GPIO ("0" or "1") with read/write permissions.
   - label: used to get the label of the GPIO with read only permissions.
 - It implements a show and store methods for the attributes.
 
-## For Testing:
+## Compile
 
 - Be sure to disable the leds block in the am335x-bone-common.dtsi file, placed in <linux root dir>/arch/arm/boot/dts/ :
 ```
@@ -59,6 +59,9 @@ make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- am335x-boneblack.dtb
 ```cosole
 make all
 ```
+
+## Test
+
 - Place the generated kernel object into the Beaglebone Black, i.e. using scp command:
 ```console
 scp *.ko debian@192.168.7.2:/home/debian/drivers
