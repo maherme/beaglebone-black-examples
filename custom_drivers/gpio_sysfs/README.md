@@ -18,6 +18,18 @@ The driver supports the below functionality:
 
 For knowing the number of GPIO in the device tree I use the [for_each_available_child_of_node](https://elixir.bootlin.com/linux/latest/C/ident/of_get_available_child_count) function.  
 For getting the GPIO descriptor I use the [devm_fwnode_get_gpiod_from_child](https://elixir.bootlin.com/linux/v6.1.55/C/ident/devm_fwnode_get_gpiod_from_child) function instead of [gpiod_get](https://elixir.bootlin.com/linux/latest/C/ident/gpiod_get).
+For using [device_unregister](https://elixir.bootlin.com/linux/latest/A/ident/device_unregister) in the gpio_sysfs_remove function, it is needed to store the pointer returned by [device_create_with_groups](https://elixir.bootlin.com/linux/latest/A/ident/device_create_with_groups) function. For this reason I have created a placeholder in the gpio_drv_private_data struct:
+```c
+struct gpio_drv_private_data{
+    int total_devices;
+    struct class* class_gpio;
+    struct device** dev;
+};
+```
+And it is needed to use devm_kzalloc for storing all detected child nodes:
+```c
+gpio_drv_data.dev = devm_kzalloc(dev, sizeof(struct device*) * gpio_drv_data.total_devices, GFP_KERNEL);
+```
 
 ## Compile
 
