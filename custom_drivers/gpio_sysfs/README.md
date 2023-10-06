@@ -3,7 +3,7 @@
 This is a driver for controlling the GPIOs through the Sysfs interface.
 The driver supports the below functionality:
 - It creates a class "bone_gpios" under /sys/class. This is done using the kernel function [class_create](https://elixir.bootlin.com/linux/latest/C/ident/class_create).
-- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function [device_create_with_groups](https://elixir.bootlin.com/linux/latest/A/ident/device_create_with_groups). For the ```const struct attribute_group **groups``` parameter is needed to create an array of attributes:
+- For every detected GPIO in the device tree, it creates a device under /sys/class/bone_gpios. This is done using the kernel function [device_create_with_groups](https://elixir.bootlin.com/linux/latest/A/ident/device_create_with_groups). I needed to create an array of attributes group for the ```const struct attribute_group **groups``` parameter:
   ```c
   static const struct attribute_group* gpio_attr_groups[] = {
     &gpio_attr_group,
