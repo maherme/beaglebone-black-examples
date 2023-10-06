@@ -10,7 +10,7 @@ The driver supports the below functionality:
   - label: used to get the label of the GPIO with read only permissions.
 - It implements a show and store methods for the attributes.
 
-For knowing the number of GPIO in the device tree I use the [for_each_available_child_of_node](https://elixir.bootlin.com/linux/latest/C/ident/of_get_available_child_count) function.
+For knowing the number of GPIO in the device tree I use the [for_each_available_child_of_node](https://elixir.bootlin.com/linux/latest/C/ident/of_get_available_child_count) function.  
 For getting the GPIO descriptor I use the [devm_fwnode_get_gpiod_from_child](https://elixir.bootlin.com/linux/v6.1.55/C/ident/devm_fwnode_get_gpiod_from_child) function instead of [gpiod_get](https://elixir.bootlin.com/linux/latest/C/ident/gpiod_get).
 
 ## Compile
