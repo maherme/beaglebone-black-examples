@@ -252,7 +252,7 @@ struct platform_driver lcd_platform_drv =
 
 int __init lcd_platform_drv_init(void)
 {
-    lcd_drv_data.class_lcd = class_create(THIS_MODULE, "lcd");
+    lcd_drv_data.class_lcd = class_create(THIS_MODULE, "lcd-16x2");
     if(IS_ERR(lcd_drv_data.class_lcd)){
         pr_err("Error in creating class\n");
         return PTR_ERR(lcd_drv_data.class_lcd);
